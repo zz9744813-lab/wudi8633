@@ -24,7 +24,7 @@ from app.schemas.signal import (
     SourceType,
 )
 
-ENGINE_VERSION = "zhouyi-yili-0.2.0"
+ENGINE_VERSION = "zhouyi-yili-0.3.0"
 
 # 通行本吉凶断辞 → 权重（正=同向，负=反向）。扫描按词长降序、命中区间互斥。
 GLOSS_TERMS: list[tuple[str, float]] = sorted(
@@ -132,18 +132,19 @@ class ZhouyiAdapter(MetaphysicalAdapter):
         text = canon + (canon_yao or "")
 
         score, hits = gloss_score(text)
-        # 对称阈值 ±0.5：弱吉套话（亨/利/无咎）落在阈下为中性，
-        # 只有真断辞（元吉/大吉/吉 ↔ 凶/厉+吝）才定方向——宁弃权不灌水
+        # 回测结论（45 人 105 事件）：文献吉凶词频天然吉多凶少，词频法定方向
+        # 恒为正向灌水（93% 命中 ≈ 正向事件占比，方向信息量为零）。
+        # C-006 下选择不投票：direction 恒 0，经文文本继续作为参读证据；
+        # 待回测语料 ≥200 且完成方向校准后再评估恢复。勿回退。
         direction = 0.0
-        if score >= 0.5:
-            direction = 1.0
-        elif score <= -0.5:
-            direction = -1.0
-        strength = min(0.7, 0.3 + abs(score) * 0.12)
-        confidence = 0.30  # 义理断辞，弱先验（禁止 6）
+        strength = 0.3
+        confidence = 0.05  # 仅文本参读权重，方向弃权故对融合几乎无影响
 
         rule_id = f"ZHOUYI-R-{ben_name}-{query.domain.value}"
-        dir_text = {1.0: "同向", -1.0: "反向", 0.0: "辞无吉凶偏向"}[direction]
+        dir_text = (
+            f"断辞扫描 {score:+.2f}（{'、'.join(hits) if hits else '无断语'}）—— "
+            "词频基线吉多凶少，方向不投票（回测结论）"
+        )
 
         evidence = [
             Evidence(

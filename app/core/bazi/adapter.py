@@ -31,7 +31,7 @@ from app.schemas.signal import (
     SourceType,
 )
 
-ENGINE_VERSION = "bazi-0.2.0"
+ENGINE_VERSION = "bazi-0.3.0"
 
 TIANGAN = "甲乙丙丁戊己庚辛壬癸"
 # 五行：木木火火土土金金水水
@@ -135,9 +135,11 @@ def day_master_strength(bazi: dict[str, str]) -> tuple[float, str, str]:
         elif cat == "官":
             score -= 0.6
 
-    if score >= 2:
+    # 阈值 ±1.5（原 ±2 过宽：丁火子月失令这类 -1.5 的清晰盘被误判中和，
+    # 与八字批示口径不一致，且导致该用户八字信号永久沉默——审计战果）
+    if score >= 1.5:
         return score, "身强", ling
-    if score <= -2:
+    if score <= -1.5:
         return score, "身弱", ling
     return score, "中和", ling
 

@@ -50,6 +50,11 @@ DOMAIN_YONGSHEN: dict[Domain, str] = {
     Domain.UNEXPECTED_EVENT: "官鬼",
 }
 
+# 旺衰打分零点漂移（随机 400 日 × 3 域实测均值，见 to_signals 注释）
+SCORE_BASELINE_OFFSET = 0.4
+# 中性弃权带：|调整后得分| 低于此值不判方向（宁弃权不硬猜）
+NEUTRAL_BAND = 0.5
+
 # 爻位名 → 1-6 爻序（初爻=1 … 上爻=6），供经文爻辞取位
 _POSITION_INDEX: dict[str, int] = {
     "初爻": 1, "二爻": 2, "三爻": 3, "四爻": 4, "五爻": 5, "上爻": 6,
@@ -112,7 +117,13 @@ class LiuyaoAdapter(MetaphysicalAdapter):
             return []
 
         score = float(yao["score"])
-        direction = 1.0 if score >= 0 else -1.0
+        # 打分零点漂移校准（round 16 回测战果）：旺衰打分在随机 400 日 × 3 域上
+        # 均值 -0.4、负分占 59%（月克/日克权重天然略偏负），未校准前命中率 41%
+        # 纯属漂移而非事件相关。重定心 + 中性弃权带，使方向基线对称。勿回退。
+        adjusted = score + SCORE_BASELINE_OFFSET
+        if abs(adjusted) < NEUTRAL_BAND:
+            return []  # 中性带：方向不确定，弃权
+        direction = 1.0 if adjusted > 0 else -1.0
         # |score| ∈ [0, 6] → strength ∈ [0.15, 0.85]
         strength = min(0.85, 0.15 + abs(score) * 0.12)
         confidence = 0.35

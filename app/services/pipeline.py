@@ -580,6 +580,9 @@ class DailyPipeline:
                 logger.warning("RealityAgent 失败：%s", exc)
 
         # --- 术式 Adapter（deterministic 部分，第 6.1 节）---
+        # 时间起卦用生成时刻的真实时辰：固定 00:00 会让梅花等时间起卦术
+        # 锁死在同一时辰上下卦组合上，产生系统方向偏斜（回测+审计战果）。
+        # 同一查询 → 同一排盘的确定性语义不变（时辰是查询的一部分）。
         query = AdapterQuery(
             user_id=self.user_id,
             domain=domain,
@@ -587,6 +590,7 @@ class DailyPipeline:
             time_scale=time_scale,
             window=window,
             target_date=target_date,
+            target_time=datetime.now().strftime("%H:%M"),
             session=self.session,
         )
         from app.core.base import registry as adapter_registry

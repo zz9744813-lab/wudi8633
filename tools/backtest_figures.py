@@ -129,6 +129,65 @@ FIGURES: list[dict] = [
      "events": [("1984-09-14", Domain.CAREER, "VMA 表演一鸣惊人", +1), ("2012-02-05", Domain.CAREER, "超级碗中场秀", +1)]},
     {"name": "汤姆·汉克斯", "birth": (1956, 7, 9), "time": None, "time_known": False, "gender": "male",
      "events": [("1988-04-30", Domain.RELATIONSHIP, "结婚", +1), ("1994-03-21", Domain.CAREER, "奥斯卡影帝", +1), ("1995-03-27", Domain.CAREER, "奥斯卡连庄", +1)]},
+    # ---- 扩充第二轮（30 位）----
+    {"name": "迈克尔·乔丹", "birth": (1963, 2, 17), "time": None, "time_known": False, "gender": "male",
+     "events": [("1991-06-12", Domain.CAREER, "首夺总冠军", +1), ("1993-10-06", Domain.CAREER, "首次退役", -1), ("1995-03-18", Domain.CAREER, "复出", +1)]},
+    {"name": "科比·布莱恩特", "birth": (1978, 8, 23), "time": None, "time_known": False, "gender": "male",
+     "events": [("2006-01-22", Domain.CAREER, "81 分之夜", +1), ("2010-06-17", Domain.CAREER, "第五冠", +1)]},
+    {"name": "迈克尔·泰森", "birth": (1966, 6, 30), "time": None, "time_known": False, "gender": "male",
+     "events": [("1986-11-22", Domain.CAREER, "最年轻重量级拳王", +1), ("1992-02-10", Domain.CAREER, "入狱", -1)]},
+    {"name": "埃米纳姆", "birth": (1972, 10, 17), "time": None, "time_known": False, "gender": "male",
+     "events": [("2002-05-26", Domain.CAREER, "阿姆秀专辑", +1), ("2003-03-23", Domain.CAREER, "奥斯卡最佳原创歌曲", +1)]},
+    {"name": "席琳·迪翁", "birth": (1968, 3, 30), "time": None, "time_known": False, "gender": "female",
+     "events": [("1998-03-23", Domain.CAREER, "奥斯卡最佳原创歌曲", +1), ("2003-03-25", Domain.CAREER, "拉斯维加斯驻唱开演", +1)]},
+    {"name": "Lady Gaga", "birth": (1986, 3, 28), "time": None, "time_known": False, "gender": "female",
+     "events": [("2008-08-19", Domain.CAREER, "首专 The Fame 发行", +1), ("2017-02-05", Domain.CAREER, "超级碗中场秀", +1), ("2019-02-24", Domain.CAREER, "奥斯卡最佳原创歌曲", +1)]},
+    {"name": "艾玛·沃特森", "birth": (1990, 4, 15), "time": None, "time_known": False, "gender": "female",
+     "events": [("2001-11-16", Domain.CAREER, "哈利波特首映", +1), ("2014-09-21", Domain.CAREER, "联合国 HeForShe 演讲", +1)]},
+    {"name": "丹尼尔·雷德克里夫", "birth": (1989, 7, 23), "time": None, "time_known": False, "gender": "male",
+     "events": [("2001-11-16", Domain.CAREER, "哈利波特首映", +1), ("2007-02-27", Domain.CAREER, "舞台剧 Equus 突破", +1)]},
+    {"name": "罗纳尔多（大罗）", "birth": (1976, 9, 18), "time": None, "time_known": False, "gender": "male",
+     "events": [("2002-06-30", Domain.CAREER, "世界杯决赛双响夺冠", +1), ("2002-08-31", Domain.CAREER, "转会皇马", +1)]},
+    {"name": "内马尔", "birth": (1992, 2, 5), "time": None, "time_known": False, "gender": "male",
+     "events": [("2013-05-26", Domain.CAREER, "巴萨官宣转会", +1), ("2017-08-03", Domain.CAREER, "2.2 亿欧转会巴黎", +1)]},
+    {"name": "姆巴佩", "birth": (1998, 12, 20), "time": None, "time_known": False, "gender": "male",
+     "events": [("2018-07-15", Domain.CAREER, "世界杯夺冠", +1), ("2024-06-03", Domain.CAREER, "皇马官宣加盟", +1)]},
+    {"name": "宫崎骏", "birth": (1941, 1, 5), "time": None, "time_known": False, "gender": "male",
+     "events": [("2001-07-20", Domain.CAREER, "千与千寻上映", +1), ("2003-03-23", Domain.CAREER, "千与千寻奥斯卡", +1)]},
+    {"name": "林书豪", "birth": (1988, 8, 23), "time": None, "time_known": False, "gender": "male",
+     "events": [("2012-02-04", Domain.CAREER, "林来疯爆发", +1), ("2019-06-13", Domain.CAREER, "随猛龙夺冠", +1)]},
+    {"name": "贝克汉姆", "birth": (1975, 5, 2), "time": None, "time_known": False, "gender": "male",
+     "events": [("2003-07-01", Domain.CAREER, "皇马官宣转会", +1), ("1999-07-04", Domain.RELATIONSHIP, "结婚", +1)]},
+    {"name": "维多利亚·贝克汉姆", "birth": (1974, 4, 17), "time": None, "time_known": False, "gender": "female",
+     "events": [("1996-07-08", Domain.CAREER, "Wannabe 发行", +1), ("1999-07-04", Domain.RELATIONSHIP, "结婚", +1)]},
+    {"name": "沙奎尔·奥尼尔", "birth": (1972, 3, 6), "time": None, "time_known": False, "gender": "male",
+     "events": [("1992-06-24", Domain.CAREER, "状元入选", +1), ("2000-06-19", Domain.CAREER, "首冠+FMVP", +1)]},
+    {"name": "蒂姆·邓肯", "birth": (1976, 4, 25), "time": None, "time_known": False, "gender": "male",
+     "events": [("1997-06-25", Domain.CAREER, "状元入选", +1), ("1999-06-25", Domain.CAREER, "首冠", +1)]},
+    {"name": "斯蒂芬·库里", "birth": (1988, 3, 14), "time": None, "time_known": False, "gender": "male",
+     "events": [("2015-06-16", Domain.CAREER, "首冠", +1), ("2016-04-13", Domain.CAREER, "73 胜赛季", +1)]},
+    {"name": "凯文·杜兰特", "birth": (1988, 9, 29), "time": None, "time_known": False, "gender": "male",
+     "events": [("2007-06-28", Domain.CAREER, "榜眼入选", +1), ("2017-06-12", Domain.CAREER, "首冠+FMVP", +1)]},
+    {"name": "迈克尔·杰克逊", "birth": (1958, 8, 29), "time": None, "time_known": False, "gender": "male",
+     "events": [("1982-11-30", Domain.CAREER, "Thriller 发行", +1), ("1993-01-31", Domain.CAREER, "超级碗中场秀", +1)]},
+    {"name": "猫王", "birth": (1935, 1, 8), "time": None, "time_known": False, "gender": "male",
+     "events": [("1956-01-27", Domain.CAREER, "Heartbreak Hotel 发行", +1), ("1958-03-24", Domain.CAREER, "入伍服役", -1)]},
+    {"name": "约翰·列侬", "birth": (1940, 10, 9), "time": None, "time_known": False, "gender": "male",
+     "events": [("1969-03-20", Domain.RELATIONSHIP, "结婚", +1), ("1970-04-10", Domain.CAREER, "披头士解散", -1)]},
+    {"name": "保罗·麦卡特尼", "birth": (1942, 6, 18), "time": None, "time_known": False, "gender": "male",
+     "events": [("1969-03-12", Domain.RELATIONSHIP, "结婚", +1), ("1970-04-10", Domain.CAREER, "宣布离队", -1)]},
+    {"name": "爱因斯坦", "birth": (1879, 3, 14), "time": None, "time_known": False, "gender": "male",
+     "events": [("1905-06-30", Domain.CAREER, "狭义相对论发表", +1), ("1922-11-10", Domain.CAREER, "诺贝尔物理学奖", +1)]},
+    {"name": "达尔文", "birth": (1809, 2, 12), "time": None, "time_known": False, "gender": "male",
+     "events": [("1831-12-27", Domain.CAREER, "小猎犬号启航", +1), ("1859-11-24", Domain.CAREER, "物种起源出版", +1)]},
+    {"name": "居里夫人", "birth": (1867, 11, 7), "time": None, "time_known": False, "gender": "female",
+     "events": [("1903-12-10", Domain.CAREER, "诺贝尔物理学奖", +1), ("1911-12-10", Domain.CAREER, "诺贝尔化学奖", +1)]},
+    {"name": "雷军", "birth": (1969, 12, 16), "time": None, "time_known": False, "gender": "male",
+     "events": [("2010-04-06", Domain.CAREER, "小米创立", +1), ("2018-07-09", Domain.MONEY, "小米港股 IPO", +1)]},
+    {"name": "刘强东", "birth": (1974, 2, 14), "time": None, "time_known": False, "gender": "male",
+     "events": [("1998-06-18", Domain.CAREER, "京东创立", +1), ("2014-05-22", Domain.MONEY, "纳斯达克 IPO", +1), ("2018-09-02", Domain.CAREER, "明州事件", -1)]},
+    {"name": "郑钦文", "birth": (2002, 10, 8), "time": None, "time_known": False, "gender": "female",
+     "events": [("2024-08-03", Domain.CAREER, "奥运女单金牌", +1)]},
 ]
 
 _STEM = "甲乙丙丁戊己庚辛壬癸"
@@ -231,6 +290,11 @@ def main() -> dict:
             for ds, domain, label, expected in fig["events"]:
                 yy, mm, dd = (int(x) for x in ds.split("-"))
                 ev = date(yy, mm, dd)
+                # 事件真实时辰未知，统一取 12:00 曾使梅花锁死在 8 种上下卦配对
+                # （固定时辰 -> 上下卦数差恒定 -> 体用关系偏斜 77% 负）——
+                # 改为逐事件确定性伪随机时辰，消除固定时辰偏斜（勿回退）。
+                hh = (idx * 7 + len(event_log) * 3) % 24
+                mi = (len(event_log) * 13 + 7) % 60
                 q = AdapterQuery(
                     user_id=uid,
                     domain=domain,
@@ -241,7 +305,7 @@ def main() -> dict:
                         end=datetime(yy, mm, dd) + timedelta(hours=24),
                     ),
                     target_date=ev,
-                    target_time="12:00",
+                    target_time=f"{hh:02d}:{mi:02d}",
                     session=s,
                 )
                 dirs: dict[str, float] = {}

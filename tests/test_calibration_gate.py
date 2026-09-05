@@ -203,7 +203,9 @@ def test_fusion_weights_unproven_sources_weak_prior():
         weights = ReliabilityMatrix(session).fusion_weights()
 
     assert weights, "应对所有已知源给出权重"
-    assert all(w == 0.5 for w in weights.values()), weights
+    # 未实证源 = 弱先验带 [0.42, 0.55]（禁止 6；round 15/16 回测先验取代统一 0.5，
+    # 用户实证 skill 一旦存在即覆盖先验）
+    assert all(0.42 <= w <= 0.55 for w in weights.values()), weights
 
 
 def test_llm_refine_cannot_override_fusion_probability(client, user_id, _real_gates, monkeypatch):

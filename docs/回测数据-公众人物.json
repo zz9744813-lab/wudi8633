@@ -1,45 +1,45 @@
 {
  "per_source": {
   "bazi": {
-   "hit": 25,
-   "miss": 21,
-   "abstain": 59,
+   "hit": 49,
+   "miss": 35,
+   "abstain": 81,
    "error": 0
   },
   "zhouyi": {
-   "hit": 81,
-   "miss": 6,
-   "abstain": 18,
+   "hit": 0,
+   "miss": 0,
+   "abstain": 165,
    "error": 0
   },
   "liuyao": {
-   "hit": 43,
-   "miss": 62,
-   "abstain": 0,
+   "hit": 50,
+   "miss": 65,
+   "abstain": 50,
    "error": 0
   },
   "meihua": {
-   "hit": 27,
-   "miss": 36,
-   "abstain": 42,
+   "hit": 57,
+   "miss": 79,
+   "abstain": 29,
    "error": 0
   },
   "qimen": {
-   "hit": 60,
-   "miss": 44,
-   "abstain": 1,
+   "hit": 94,
+   "miss": 68,
+   "abstain": 3,
    "error": 0
   },
   "ziwei": {
-   "hit": 80,
-   "miss": 17,
-   "abstain": 8,
+   "hit": 122,
+   "miss": 31,
+   "abstain": 12,
    "error": 0
   }
  },
  "crossed": {
-  "hit": 86,
-  "miss": 19,
+  "hit": 116,
+  "miss": 49,
   "abstain": 0
  },
  "pillars": [
@@ -627,6 +627,383 @@
     "time": "庚子",
     "day_master": "丁"
    }
+  },
+  {
+   "name": "迈克尔·乔丹",
+   "year": "癸卯",
+   "expect": "癸卯",
+   "ok": true,
+   "pillars": {
+    "year": "癸卯",
+    "month": "甲寅",
+    "day": "辛卯",
+    "time": "戊子",
+    "day_master": "辛"
+   }
+  },
+  {
+   "name": "科比·布莱恩特",
+   "year": "戊午",
+   "expect": "戊午",
+   "ok": true,
+   "pillars": {
+    "year": "戊午",
+    "month": "庚申",
+    "day": "丁巳",
+    "time": "庚子",
+    "day_master": "丁"
+   }
+  },
+  {
+   "name": "迈克尔·泰森",
+   "year": "丙午",
+   "expect": "丙午",
+   "ok": true,
+   "pillars": {
+    "year": "丙午",
+    "month": "甲午",
+    "day": "庚申",
+    "time": "丙子",
+    "day_master": "庚"
+   }
+  },
+  {
+   "name": "埃米纳姆",
+   "year": "壬子",
+   "expect": "壬子",
+   "ok": true,
+   "pillars": {
+    "year": "壬子",
+    "month": "庚戌",
+    "day": "辛巳",
+    "time": "戊子",
+    "day_master": "辛"
+   }
+  },
+  {
+   "name": "席琳·迪翁",
+   "year": "戊申",
+   "expect": "戊申",
+   "ok": true,
+   "pillars": {
+    "year": "戊申",
+    "month": "乙卯",
+    "day": "己亥",
+    "time": "甲子",
+    "day_master": "己"
+   }
+  },
+  {
+   "name": "Lady Gaga",
+   "year": "丙寅",
+   "expect": "丙寅",
+   "ok": true,
+   "pillars": {
+    "year": "丙寅",
+    "month": "辛卯",
+    "day": "辛未",
+    "time": "戊子",
+    "day_master": "辛"
+   }
+  },
+  {
+   "name": "艾玛·沃特森",
+   "year": "庚午",
+   "expect": "庚午",
+   "ok": true,
+   "pillars": {
+    "year": "庚午",
+    "month": "庚辰",
+    "day": "庚戌",
+    "time": "丙子",
+    "day_master": "庚"
+   }
+  },
+  {
+   "name": "丹尼尔·雷德克里夫",
+   "year": "己巳",
+   "expect": "己巳",
+   "ok": true,
+   "pillars": {
+    "year": "己巳",
+    "month": "辛未",
+    "day": "甲申",
+    "time": "甲子",
+    "day_master": "甲"
+   }
+  },
+  {
+   "name": "罗纳尔多（大罗）",
+   "year": "丙辰",
+   "expect": "丙辰",
+   "ok": true,
+   "pillars": {
+    "year": "丙辰",
+    "month": "丁酉",
+    "day": "癸酉",
+    "time": "壬子",
+    "day_master": "癸"
+   }
+  },
+  {
+   "name": "内马尔",
+   "year": "壬申",
+   "expect": "壬申",
+   "ok": true,
+   "pillars": {
+    "year": "壬申",
+    "month": "壬寅",
+    "day": "辛亥",
+    "time": "戊子",
+    "day_master": "辛"
+   }
+  },
+  {
+   "name": "姆巴佩",
+   "year": "戊寅",
+   "expect": "戊寅",
+   "ok": true,
+   "pillars": {
+    "year": "戊寅",
+    "month": "甲子",
+    "day": "辛丑",
+    "time": "戊子",
+    "day_master": "辛"
+   }
+  },
+  {
+   "name": "宫崎骏",
+   "year": "庚辰",
+   "expect": "庚辰",
+   "ok": true,
+   "pillars": {
+    "year": "庚辰",
+    "month": "戊子",
+    "day": "癸丑",
+    "time": "壬子",
+    "day_master": "癸"
+   }
+  },
+  {
+   "name": "林书豪",
+   "year": "戊辰",
+   "expect": "戊辰",
+   "ok": true,
+   "pillars": {
+    "year": "戊辰",
+    "month": "庚申",
+    "day": "庚戌",
+    "time": "丙子",
+    "day_master": "庚"
+   }
+  },
+  {
+   "name": "贝克汉姆",
+   "year": "乙卯",
+   "expect": "乙卯",
+   "ok": true,
+   "pillars": {
+    "year": "乙卯",
+    "month": "庚辰",
+    "day": "戊申",
+    "time": "壬子",
+    "day_master": "戊"
+   }
+  },
+  {
+   "name": "维多利亚·贝克汉姆",
+   "year": "甲寅",
+   "expect": "甲寅",
+   "ok": true,
+   "pillars": {
+    "year": "甲寅",
+    "month": "戊辰",
+    "day": "戊子",
+    "time": "壬子",
+    "day_master": "戊"
+   }
+  },
+  {
+   "name": "沙奎尔·奥尼尔",
+   "year": "壬子",
+   "expect": "壬子",
+   "ok": true,
+   "pillars": {
+    "year": "壬子",
+    "month": "癸卯",
+    "day": "丙申",
+    "time": "戊子",
+    "day_master": "丙"
+   }
+  },
+  {
+   "name": "蒂姆·邓肯",
+   "year": "丙辰",
+   "expect": "丙辰",
+   "ok": true,
+   "pillars": {
+    "year": "丙辰",
+    "month": "壬辰",
+    "day": "丁未",
+    "time": "庚子",
+    "day_master": "丁"
+   }
+  },
+  {
+   "name": "斯蒂芬·库里",
+   "year": "戊辰",
+   "expect": "戊辰",
+   "ok": true,
+   "pillars": {
+    "year": "戊辰",
+    "month": "乙卯",
+    "day": "戊辰",
+    "time": "壬子",
+    "day_master": "戊"
+   }
+  },
+  {
+   "name": "凯文·杜兰特",
+   "year": "戊辰",
+   "expect": "戊辰",
+   "ok": true,
+   "pillars": {
+    "year": "戊辰",
+    "month": "辛酉",
+    "day": "丁亥",
+    "time": "庚子",
+    "day_master": "丁"
+   }
+  },
+  {
+   "name": "迈克尔·杰克逊",
+   "year": "戊戌",
+   "expect": "戊戌",
+   "ok": true,
+   "pillars": {
+    "year": "戊戌",
+    "month": "庚申",
+    "day": "戊寅",
+    "time": "壬子",
+    "day_master": "戊"
+   }
+  },
+  {
+   "name": "猫王",
+   "year": "甲戌",
+   "expect": "甲戌",
+   "ok": true,
+   "pillars": {
+    "year": "甲戌",
+    "month": "丁丑",
+    "day": "甲申",
+    "time": "甲子",
+    "day_master": "甲"
+   }
+  },
+  {
+   "name": "约翰·列侬",
+   "year": "庚辰",
+   "expect": "庚辰",
+   "ok": true,
+   "pillars": {
+    "year": "庚辰",
+    "month": "丙戌",
+    "day": "乙酉",
+    "time": "丙子",
+    "day_master": "乙"
+   }
+  },
+  {
+   "name": "保罗·麦卡特尼",
+   "year": "壬午",
+   "expect": "壬午",
+   "ok": true,
+   "pillars": {
+    "year": "壬午",
+    "month": "丙午",
+    "day": "壬寅",
+    "time": "庚子",
+    "day_master": "壬"
+   }
+  },
+  {
+   "name": "爱因斯坦",
+   "year": "己卯",
+   "expect": "己卯",
+   "ok": true,
+   "pillars": {
+    "year": "己卯",
+    "month": "丁卯",
+    "day": "丙申",
+    "time": "戊子",
+    "day_master": "丙"
+   }
+  },
+  {
+   "name": "达尔文",
+   "year": "己巳",
+   "expect": "己巳",
+   "ok": true,
+   "pillars": {
+    "year": "己巳",
+    "month": "丙寅",
+    "day": "己未",
+    "time": "甲子",
+    "day_master": "己"
+   }
+  },
+  {
+   "name": "居里夫人",
+   "year": "丁卯",
+   "expect": "丁卯",
+   "ok": true,
+   "pillars": {
+    "year": "丁卯",
+    "month": "庚戌",
+    "day": "辛卯",
+    "time": "戊子",
+    "day_master": "辛"
+   }
+  },
+  {
+   "name": "雷军",
+   "year": "己酉",
+   "expect": "己酉",
+   "ok": true,
+   "pillars": {
+    "year": "己酉",
+    "month": "丙子",
+    "day": "乙丑",
+    "time": "丙子",
+    "day_master": "乙"
+   }
+  },
+  {
+   "name": "刘强东",
+   "year": "甲寅",
+   "expect": "甲寅",
+   "ok": true,
+   "pillars": {
+    "year": "甲寅",
+    "month": "丙寅",
+    "day": "丙戌",
+    "time": "戊子",
+    "day_master": "丙"
+   }
+  },
+  {
+   "name": "郑钦文",
+   "year": "壬午",
+   "expect": "壬午",
+   "ok": true,
+   "pillars": {
+    "year": "壬午",
+    "month": "己酉",
+    "day": "己酉",
+    "time": "甲子",
+    "day_master": "己"
+   }
   }
  ],
  "events": [
@@ -637,10 +1014,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": -1.0,
-    "qimen": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -651,10 +1028,10 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -665,10 +1042,10 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -679,11 +1056,11 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": -1.0,
-    "ziwei": 1.0
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 0.0
    }
   },
   {
@@ -693,9 +1070,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -707,10 +1084,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
-    "qimen": 1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -721,11 +1098,11 @@
    "expected": -1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": 1.0,
-    "meihua": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
-    "ziwei": 0.0
+    "ziwei": 1.0
    }
   },
   {
@@ -735,8 +1112,8 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
     "meihua": 0.0,
     "qimen": 1.0,
     "ziwei": 1.0
@@ -749,9 +1126,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
+    "meihua": 0.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -763,9 +1140,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -777,11 +1154,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
-    "ziwei": -1.0
+    "ziwei": 1.0
    }
   },
   {
@@ -792,10 +1169,10 @@
    "dirs": {
     "bazi": 0.0,
     "zhouyi": 0.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
+    "liuyao": 1.0,
+    "meihua": 1.0,
     "qimen": -1.0,
-    "ziwei": -1.0
+    "ziwei": 1.0
    }
   },
   {
@@ -805,11 +1182,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
+    "meihua": 1.0,
     "qimen": 1.0,
-    "ziwei": 0.0
+    "ziwei": 1.0
    }
   },
   {
@@ -819,9 +1196,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
     "qimen": -1.0,
     "ziwei": 1.0
    }
@@ -833,8 +1210,8 @@
    "expected": -1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
     "meihua": -1.0,
     "qimen": -1.0,
     "ziwei": 1.0
@@ -847,11 +1224,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 0.0,
+    "meihua": 1.0,
     "qimen": 1.0,
-    "ziwei": 0.0
+    "ziwei": 1.0
    }
   },
   {
@@ -861,9 +1238,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": 1.0,
-    "meihua": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -875,11 +1252,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 1.0,
-    "qimen": -1.0,
-    "ziwei": 1.0
+    "meihua": 0.0,
+    "qimen": 1.0,
+    "ziwei": 0.0
    }
   },
   {
@@ -890,10 +1267,10 @@
    "dirs": {
     "bazi": 0.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
+    "liuyao": -1.0,
     "meihua": -1.0,
     "qimen": 1.0,
-    "ziwei": 1.0
+    "ziwei": 0.0
    }
   },
   {
@@ -903,10 +1280,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 1.0,
-    "qimen": 1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -919,9 +1296,9 @@
     "bazi": 0.0,
     "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": -1.0,
-    "qimen": 1.0,
-    "ziwei": -1.0
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
    }
   },
   {
@@ -931,11 +1308,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 1.0,
+    "meihua": -1.0,
     "qimen": -1.0,
-    "ziwei": 0.0
+    "ziwei": 1.0
    }
   },
   {
@@ -945,9 +1322,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
     "qimen": -1.0,
     "ziwei": 1.0
    }
@@ -959,10 +1336,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -974,8 +1351,8 @@
    "dirs": {
     "bazi": 1.0,
     "zhouyi": 0.0,
-    "liuyao": -1.0,
-    "meihua": -1.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -987,9 +1364,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 1.0,
+    "meihua": -1.0,
     "qimen": -1.0,
     "ziwei": 1.0
    }
@@ -1001,10 +1378,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
-    "qimen": 1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1015,10 +1392,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": 1.0,
-    "meihua": 1.0,
-    "qimen": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1029,11 +1406,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
     "meihua": -1.0,
-    "qimen": -1.0,
-    "ziwei": 0.0
+    "qimen": 1.0,
+    "ziwei": 1.0
    }
   },
   {
@@ -1043,11 +1420,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": -1.0,
-    "qimen": -1.0,
-    "ziwei": 0.0
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
    }
   },
   {
@@ -1058,8 +1435,8 @@
    "dirs": {
     "bazi": -1.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
-    "meihua": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1072,9 +1449,9 @@
    "dirs": {
     "bazi": 1.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
+    "liuyao": -1.0,
     "meihua": -1.0,
-    "qimen": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1085,9 +1462,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": -1.0,
+    "meihua": 1.0,
     "qimen": -1.0,
     "ziwei": -1.0
    }
@@ -1100,9 +1477,9 @@
    "dirs": {
     "bazi": -1.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
-    "meihua": 0.0,
-    "qimen": -1.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1114,10 +1491,10 @@
    "dirs": {
     "bazi": 0.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
-    "meihua": -1.0,
-    "qimen": 1.0,
-    "ziwei": 1.0
+    "liuyao": 0.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": -1.0
    }
   },
   {
@@ -1128,10 +1505,10 @@
    "dirs": {
     "bazi": 0.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
-    "meihua": -1.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
     "qimen": 1.0,
-    "ziwei": 1.0
+    "ziwei": 0.0
    }
   },
   {
@@ -1141,10 +1518,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": 1.0,
-    "meihua": 1.0,
-    "qimen": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1155,9 +1532,9 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
+    "meihua": 1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1169,10 +1546,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": 0.0,
     "ziwei": 1.0
    }
   },
@@ -1183,10 +1560,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
+    "qimen": 0.0,
     "ziwei": 1.0
    }
   },
@@ -1197,11 +1574,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
-    "qimen": 1.0,
-    "ziwei": 1.0
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 0.0
    }
   },
   {
@@ -1211,10 +1588,10 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
     "meihua": 1.0,
-    "qimen": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1225,11 +1602,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": -1.0,
-    "qimen": 1.0,
-    "ziwei": 1.0
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": -1.0
    }
   },
   {
@@ -1239,9 +1616,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1253,9 +1630,9 @@
    "expected": -1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
+    "meihua": 1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1266,11 +1643,11 @@
    "date": "2010-01-18",
    "expected": 1,
    "dirs": {
-    "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1280,11 +1657,11 @@
    "date": "2018-09-30",
    "expected": 1,
    "dirs": {
-    "bazi": 0.0,
+    "bazi": -1.0,
     "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1295,10 +1672,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": 1.0,
-    "qimen": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1309,10 +1686,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": -1.0,
-    "qimen": -1.0,
+    "meihua": 0.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1323,10 +1700,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 1.0,
-    "qimen": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1337,10 +1714,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
     "meihua": 1.0,
-    "qimen": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1351,11 +1728,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 1.0,
-    "qimen": 1.0,
-    "ziwei": 1.0
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": -1.0
    }
   },
   {
@@ -1366,8 +1743,8 @@
    "dirs": {
     "bazi": 1.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
-    "meihua": -1.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1379,7 +1756,7 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": -1.0,
     "qimen": -1.0,
@@ -1392,11 +1769,11 @@
    "date": "2008-01-27",
    "expected": 1,
    "dirs": {
-    "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1406,12 +1783,12 @@
    "date": "2011-07-04",
    "expected": 1,
    "dirs": {
-    "bazi": 0.0,
-    "zhouyi": 1.0,
+    "bazi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 1.0,
+    "meihua": -1.0,
     "qimen": 1.0,
-    "ziwei": -1.0
+    "ziwei": 1.0
    }
   },
   {
@@ -1421,10 +1798,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1435,10 +1812,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
     "meihua": 1.0,
-    "qimen": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1449,7 +1826,7 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": -1.0,
     "qimen": -1.0,
@@ -1463,11 +1840,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": 1.0,
-    "qimen": 1.0,
-    "ziwei": 1.0
+    "qimen": -1.0,
+    "ziwei": 0.0
    }
   },
   {
@@ -1477,7 +1854,7 @@
    "expected": -1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
     "meihua": 0.0,
     "qimen": 1.0,
@@ -1491,10 +1868,10 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
-    "qimen": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1507,9 +1884,9 @@
     "bazi": 1.0,
     "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
-    "ziwei": 1.0
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": -1.0
    }
   },
   {
@@ -1519,7 +1896,7 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": -1.0,
     "qimen": 1.0,
@@ -1536,7 +1913,7 @@
     "zhouyi": 0.0,
     "liuyao": 1.0,
     "meihua": 0.0,
-    "qimen": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1547,11 +1924,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
-    "qimen": 0.0,
-    "ziwei": -1.0
+    "meihua": 0.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
    }
   },
   {
@@ -1561,10 +1938,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": -1.0,
-    "qimen": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1579,7 +1956,7 @@
     "liuyao": -1.0,
     "meihua": -1.0,
     "qimen": 1.0,
-    "ziwei": 1.0
+    "ziwei": 0.0
    }
   },
   {
@@ -1589,10 +1966,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 1.0,
-    "qimen": -1.0,
+    "meihua": 0.0,
+    "qimen": 0.0,
     "ziwei": 1.0
    }
   },
@@ -1603,11 +1980,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": -1.0,
-    "qimen": -1.0,
-    "ziwei": -1.0
+    "qimen": 1.0,
+    "ziwei": 1.0
    }
   },
   {
@@ -1617,11 +1994,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
-    "ziwei": 1.0
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": -1.0
    }
   },
   {
@@ -1631,11 +2008,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
-    "ziwei": -1.0
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
    }
   },
   {
@@ -1645,8 +2022,8 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
     "meihua": 1.0,
     "qimen": 1.0,
     "ziwei": -1.0
@@ -1659,11 +2036,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": 1.0,
-    "meihua": 0.0,
-    "qimen": -1.0,
-    "ziwei": -1.0
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
    }
   },
   {
@@ -1673,11 +2050,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 0.0,
     "qimen": 1.0,
-    "ziwei": 1.0
+    "ziwei": -1.0
    }
   },
   {
@@ -1687,9 +2064,9 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": -1.0,
+    "meihua": 1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1701,10 +2078,10 @@
    "expected": -1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 1.0,
-    "qimen": 1.0,
+    "meihua": 0.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1717,8 +2094,8 @@
     "bazi": 0.0,
     "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
-    "qimen": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1729,10 +2106,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 0.0,
-    "qimen": 1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -1743,9 +2120,9 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 1.0,
+    "meihua": -1.0,
     "qimen": -1.0,
     "ziwei": -1.0
    }
@@ -1757,11 +2134,11 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
     "meihua": 1.0,
     "qimen": 1.0,
-    "ziwei": 0.0
+    "ziwei": -1.0
    }
   },
   {
@@ -1772,7 +2149,7 @@
    "dirs": {
     "bazi": 1.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
+    "liuyao": -1.0,
     "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
@@ -1785,9 +2162,9 @@
    "expected": -1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1798,11 +2175,11 @@
    "date": "2022-02-08",
    "expected": 1,
    "dirs": {
-    "bazi": 0.0,
-    "zhouyi": 1.0,
+    "bazi": -1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
     "meihua": 0.0,
-    "qimen": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1812,12 +2189,12 @@
    "date": "2022-02-18",
    "expected": 1,
    "dirs": {
-    "bazi": 0.0,
-    "zhouyi": 1.0,
+    "bazi": -1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
     "meihua": -1.0,
     "qimen": 1.0,
-    "ziwei": 1.0
+    "ziwei": -1.0
    }
   },
   {
@@ -1827,8 +2204,8 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
     "meihua": -1.0,
     "qimen": -1.0,
     "ziwei": 1.0
@@ -1841,9 +2218,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1855,9 +2232,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1870,8 +2247,8 @@
    "dirs": {
     "bazi": 0.0,
     "zhouyi": 0.0,
-    "liuyao": 1.0,
-    "meihua": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1883,11 +2260,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 1.0,
     "qimen": -1.0,
-    "ziwei": 1.0
+    "ziwei": -1.0
    }
   },
   {
@@ -1897,8 +2274,8 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
     "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
@@ -1911,10 +2288,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 1.0,
-    "qimen": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1927,7 +2304,7 @@
     "bazi": -1.0,
     "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": 0.0,
+    "meihua": -1.0,
     "qimen": -1.0,
     "ziwei": 1.0
    }
@@ -1939,9 +2316,9 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1953,9 +2330,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -1967,7 +2344,7 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": 0.0,
     "qimen": 1.0,
@@ -1981,10 +2358,10 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
-    "liuyao": 1.0,
-    "meihua": -1.0,
-    "qimen": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -1995,10 +2372,10 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": 0.0,
-    "qimen": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
     "ziwei": 1.0
    }
   },
@@ -2009,7 +2386,7 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
     "meihua": 0.0,
     "qimen": -1.0,
@@ -2023,9 +2400,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
-    "meihua": -1.0,
+    "meihua": 0.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -2037,9 +2414,9 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -2051,10 +2428,10 @@
    "expected": 1,
    "dirs": {
     "bazi": -1.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": 1.0,
-    "qimen": 1.0,
+    "qimen": -1.0,
     "ziwei": 1.0
    }
   },
@@ -2065,9 +2442,9 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
-    "liuyao": -1.0,
-    "meihua": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
@@ -2079,11 +2456,11 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
     "liuyao": 1.0,
-    "meihua": -1.0,
-    "qimen": -1.0,
-    "ziwei": 0.0
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
    }
   },
   {
@@ -2093,14 +2470,854 @@
    "expected": 1,
    "dirs": {
     "bazi": 0.0,
-    "zhouyi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "迈克尔·乔丹",
+   "event": "首夺总冠军",
+   "date": "1991-06-12",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "迈克尔·乔丹",
+   "event": "首次退役",
+   "date": "1993-10-06",
+   "expected": -1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "迈克尔·乔丹",
+   "event": "复出",
+   "date": "1995-03-18",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "科比·布莱恩特",
+   "event": "81 分之夜",
+   "date": "2006-01-22",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "科比·布莱恩特",
+   "event": "第五冠",
+   "date": "2010-06-17",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "迈克尔·泰森",
+   "event": "最年轻重量级拳王",
+   "date": "1986-11-22",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 0.0
+   }
+  },
+  {
+   "figure": "迈克尔·泰森",
+   "event": "入狱",
+   "date": "1992-02-10",
+   "expected": -1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 0.0,
+    "qimen": 1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "埃米纳姆",
+   "event": "阿姆秀专辑",
+   "date": "2002-05-26",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "埃米纳姆",
+   "event": "奥斯卡最佳原创歌曲",
+   "date": "2003-03-23",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "席琳·迪翁",
+   "event": "奥斯卡最佳原创歌曲",
+   "date": "1998-03-23",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 0.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "席琳·迪翁",
+   "event": "拉斯维加斯驻唱开演",
+   "date": "2003-03-25",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 0.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "Lady Gaga",
+   "event": "首专 The Fame 发行",
+   "date": "2008-08-19",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "Lady Gaga",
+   "event": "超级碗中场秀",
+   "date": "2017-02-05",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "Lady Gaga",
+   "event": "奥斯卡最佳原创歌曲",
+   "date": "2019-02-24",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "艾玛·沃特森",
+   "event": "哈利波特首映",
+   "date": "2001-11-16",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 0.0
+   }
+  },
+  {
+   "figure": "艾玛·沃特森",
+   "event": "联合国 HeForShe 演讲",
+   "date": "2014-09-21",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "丹尼尔·雷德克里夫",
+   "event": "哈利波特首映",
+   "date": "2001-11-16",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "丹尼尔·雷德克里夫",
+   "event": "舞台剧 Equus 突破",
+   "date": "2007-02-27",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "罗纳尔多（大罗）",
+   "event": "世界杯决赛双响夺冠",
+   "date": "2002-06-30",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "罗纳尔多（大罗）",
+   "event": "转会皇马",
+   "date": "2002-08-31",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "内马尔",
+   "event": "巴萨官宣转会",
+   "date": "2013-05-26",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "内马尔",
+   "event": "2.2 亿欧转会巴黎",
+   "date": "2017-08-03",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "姆巴佩",
+   "event": "世界杯夺冠",
+   "date": "2018-07-15",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 0.0
+   }
+  },
+  {
+   "figure": "姆巴佩",
+   "event": "皇马官宣加盟",
+   "date": "2024-06-03",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "宫崎骏",
+   "event": "千与千寻上映",
+   "date": "2001-07-20",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "宫崎骏",
+   "event": "千与千寻奥斯卡",
+   "date": "2003-03-23",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
+    "qimen": 1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "林书豪",
+   "event": "林来疯爆发",
+   "date": "2012-02-04",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "林书豪",
+   "event": "随猛龙夺冠",
+   "date": "2019-06-13",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "贝克汉姆",
+   "event": "皇马官宣转会",
+   "date": "2003-07-01",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "贝克汉姆",
+   "event": "结婚",
+   "date": "1999-07-04",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 0.0,
+    "qimen": 1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "维多利亚·贝克汉姆",
+   "event": "Wannabe 发行",
+   "date": "1996-07-08",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "维多利亚·贝克汉姆",
+   "event": "结婚",
+   "date": "1999-07-04",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "沙奎尔·奥尼尔",
+   "event": "状元入选",
+   "date": "1992-06-24",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "沙奎尔·奥尼尔",
+   "event": "首冠+FMVP",
+   "date": "2000-06-19",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "蒂姆·邓肯",
+   "event": "状元入选",
+   "date": "1997-06-25",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "蒂姆·邓肯",
+   "event": "首冠",
+   "date": "1999-06-25",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "斯蒂芬·库里",
+   "event": "首冠",
+   "date": "2015-06-16",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "斯蒂芬·库里",
+   "event": "73 胜赛季",
+   "date": "2016-04-13",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "凯文·杜兰特",
+   "event": "榜眼入选",
+   "date": "2007-06-28",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "凯文·杜兰特",
+   "event": "首冠+FMVP",
+   "date": "2017-06-12",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "迈克尔·杰克逊",
+   "event": "Thriller 发行",
+   "date": "1982-11-30",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "迈克尔·杰克逊",
+   "event": "超级碗中场秀",
+   "date": "1993-01-31",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "猫王",
+   "event": "Heartbreak Hotel 发行",
+   "date": "1956-01-27",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "猫王",
+   "event": "入伍服役",
+   "date": "1958-03-24",
+   "expected": -1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "约翰·列侬",
+   "event": "结婚",
+   "date": "1969-03-20",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": -1.0
+   }
+  },
+  {
+   "figure": "约翰·列侬",
+   "event": "披头士解散",
+   "date": "1970-04-10",
+   "expected": -1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 0.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "保罗·麦卡特尼",
+   "event": "结婚",
+   "date": "1969-03-12",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 1.0,
+    "qimen": -1.0,
+    "ziwei": 0.0
+   }
+  },
+  {
+   "figure": "保罗·麦卡特尼",
+   "event": "宣布离队",
+   "date": "1970-04-10",
+   "expected": -1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
     "liuyao": -1.0,
     "meihua": 0.0,
     "qimen": 1.0,
     "ziwei": 1.0
    }
+  },
+  {
+   "figure": "爱因斯坦",
+   "event": "狭义相对论发表",
+   "date": "1905-06-30",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "爱因斯坦",
+   "event": "诺贝尔物理学奖",
+   "date": "1922-11-10",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "达尔文",
+   "event": "小猎犬号启航",
+   "date": "1831-12-27",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "达尔文",
+   "event": "物种起源出版",
+   "date": "1859-11-24",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "居里夫人",
+   "event": "诺贝尔物理学奖",
+   "date": "1903-12-10",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "居里夫人",
+   "event": "诺贝尔化学奖",
+   "date": "1911-12-10",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "雷军",
+   "event": "小米创立",
+   "date": "2010-04-06",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": 0.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "雷军",
+   "event": "小米港股 IPO",
+   "date": "2018-07-09",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "刘强东",
+   "event": "京东创立",
+   "date": "1998-06-18",
+   "expected": 1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "刘强东",
+   "event": "纳斯达克 IPO",
+   "date": "2014-05-22",
+   "expected": 1,
+   "dirs": {
+    "bazi": 1.0,
+    "zhouyi": 0.0,
+    "liuyao": 1.0,
+    "meihua": -1.0,
+    "qimen": -1.0,
+    "ziwei": 0.0
+   }
+  },
+  {
+   "figure": "刘强东",
+   "event": "明州事件",
+   "date": "2018-09-02",
+   "expected": -1,
+   "dirs": {
+    "bazi": -1.0,
+    "zhouyi": 0.0,
+    "liuyao": -1.0,
+    "meihua": 1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
+  },
+  {
+   "figure": "郑钦文",
+   "event": "奥运女单金牌",
+   "date": "2024-08-03",
+   "expected": 1,
+   "dirs": {
+    "bazi": 0.0,
+    "zhouyi": 0.0,
+    "liuyao": 0.0,
+    "meihua": -1.0,
+    "qimen": 1.0,
+    "ziwei": 1.0
+   }
   }
  ],
- "n_events": 105,
- "n_positive": 98
+ "n_events": 165,
+ "n_positive": 152
 }

@@ -31,7 +31,7 @@ def test_zhouyi_in_scale_support_and_reliability_floor(sesh):
     from app.schemas.signal import SourceType, TimeScale
 
     weights = ReliabilityMatrix(sesh, user_id=1).fusion_weights()
-    assert weights.get("zhouyi") == 0.5, "未实证源必须落在弱先验下限"
+    assert weights.get("zhouyi") == 0.42, "未实证源必须落在回测先验地板（zhouyi 方向弃权）"
     sup = SourceType.ZHOUYI
 
 

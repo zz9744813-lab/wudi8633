@@ -203,11 +203,15 @@ class ReliabilityMatrix:
             if system:
                 cell_by_source[system] = cell
 
+        # 回测先验（45 人 105 事件，round 15）：方向信息量差异的弱先验地板，
+        # 幅度 ≤±0.1；用户自己的已验证 skill 一旦存在即完全覆盖（本方法上面的映射）。
+        BACKTEST_PRIOR = {"ziwei": 0.55, "liuyao": 0.44, "meihua": 0.47, "zhouyi": 0.42}
+
         weights: dict[str, float] = {}
         for src in SourceType:
             cell = cell_by_source.get(src.value)
             if cell is None or cell.skill is None:
-                weights[src.value] = 0.5
+                weights[src.value] = BACKTEST_PRIOR.get(src.value, 0.5)
                 continue
             # 线性映射：skill ∈ [-0.5, 0.5] → weight ∈ [0.5, 1.5]
             weights[src.value] = min(2.0, max(0.5, 1.0 + cell.skill * 2.0))

@@ -152,7 +152,10 @@ def test_liuyao_adapter_canon_yao_ci_when_yongshen_moving():
                 None,
             )
             if yao is not None and yao["moving"]:
-                sig = adapter.to_signals(q, chart)[0]
+                sigs = adapter.to_signals(q, chart)
+                if not sigs:
+                    continue  # 中性带弃权（round 16 重定心后合法状态）
+                sig = sigs[0]
                 hit = (chart, sig)
                 break
         if hit:
