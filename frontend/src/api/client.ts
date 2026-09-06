@@ -11,7 +11,10 @@ import type {
   PredictionDetail,
   ReliabilityMatrix,
   RuleItem,
+  Signal,
 } from '../types';
+
+export type { PredictionDetail, Signal };
 
 const BASE = import.meta.env.VITE_BACKEND_URL ?? '';
 

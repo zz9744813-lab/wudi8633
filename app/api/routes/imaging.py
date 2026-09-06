@@ -9,7 +9,8 @@ from __future__ import annotations
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from fastapi.responses import JSONResponse
 
-from app.database import get_engine, get_session
+from app.database import engine as db_engine
+from app.database import get_session
 from app.services import imaging
 
 router = APIRouter()
@@ -70,7 +71,7 @@ async def analyze_image(
             from app.database import get_engine
 
             hand_v = hand if hand in ("left", "right") else "right"
-            with Session(get_engine()) as session:
+            with Session(db_engine) as session:  # 全局单例引擎（勿用 get_engine()：每次新建引擎=句柄泄漏）
                 record_id = imaging.save_record(
                     session, user_id, kind, local["features"], local["detected"], hand=hand_v
                 )

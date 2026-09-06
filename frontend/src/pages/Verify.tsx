@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 
 import { api, DEFAULT_USER_ID } from '../api/client';
 import {
@@ -47,6 +47,8 @@ type Verdict = {
   /** D=无法判定时不落结果，为 null */
   outcome: number | null;
   confidence: number;
+  /** 本条 Brier 误差：(probability - outcome)^2（D 档为 null） */
+  brier?: number | null;
   needsConfirmation: boolean;
   at: number;
   reply?: string;
@@ -84,11 +86,32 @@ export default function Verify() {
   );
   const totalToday = doneList.length + pending.length;
 
+  // 键盘连批：1命中 / 2未中 / 3部分 / 4无法判定（输入框聚焦时不劫持）
+  useEffect(() => {
+    const h = (e: KeyboardEvent) => {
+      const tag = (e.target as HTMLElement | null)?.tagName ?? '';
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag)) return;
+      if (busy) return;
+      const cur = pending[0];
+      if (!cur) return;
+      const idx = ['1', '2', '3', '4'].indexOf(e.key);
+      if (idx < 0) return;
+      e.preventDefault();
+      const v = VERDICTS[idx];
+      void stamp(cur.prediction_id, v.key, v.label);
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  });
+
   const stamp = async (pid: string, quick: string, label: string) => {
     if (busy) return;
     setBusy(true);
     try {
       const r = await api.verify(pid, reply.trim() || undefined, quick);
+      const cur = pending.find((p) => p.prediction_id === pid);
+      const brier =
+        r.outcome == null || cur == null ? null : (cur.probability - r.outcome) ** 2;
       setDone((s) => ({
         ...s,
         [pid]: {
@@ -96,10 +119,11 @@ export default function Verify() {
           label,
           outcome: r.outcome,
           confidence: r.confidence,
+          brier,
           needsConfirmation: r.needs_confirmation,
           at: Date.now(),
           reply: reply.trim() || undefined,
-          ...{ desc: pending.find((p) => p.prediction_id === pid)?.description ?? '' },
+          desc: pending.find((p) => p.prediction_id === pid)?.description ?? '',
         } as Verdict,
       }));
       setReply('');
@@ -215,6 +239,7 @@ export default function Verify() {
                 <button
                   key={v.key}
                   disabled={busy}
+                  data-kbd={v.key}
                   onClick={() => void stamp(current.prediction_id, v.key, v.label)}
                   className={`btn-press flex flex-col items-center gap-1 rounded-xl border px-3 py-3 disabled:opacity-50 ${VERDICT_STYLE[v.tone]}`}
                 >
@@ -272,6 +297,7 @@ export default function Verify() {
                         ? '未计结果'
                         : `判定值 ${(d.outcome * 100).toFixed(0)}%`}{' '}
                       · 置信 {((d.confidence ?? 0) * 100).toFixed(0)}%
+                      {d.brier != null && ` · 误差 ${d.brier.toFixed(3)}`}
                       {d.needsConfirmation && ' · 转待人工确认'}
                       {d.reply && ` · 附言：${d.reply}`}
                     </div>

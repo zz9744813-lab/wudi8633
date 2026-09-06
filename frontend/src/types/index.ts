@@ -128,7 +128,7 @@ export interface PredictionDetail extends PredictionBrief {
   evidence_dependency: Record<string, string[]>;
   integrity: {
     stored_hash: string;
-    computed_hash: string | null;
+    recomputed_hash: string | null;
     ok: boolean;
     rebuild_matches_payload?: boolean;
   } | null;

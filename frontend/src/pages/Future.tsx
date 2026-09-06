@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import { api, DEFAULT_USER_ID } from '../api/client';
 import { AlmanacDial, ColorSwatches, DOMAIN_ACCENT, Sparkles } from '../components/almanac';
 import { DivinationStage } from '../components/rituals';
+import { PredictionDrawer } from '../components/prediction-drawer';
 import {
   Badge,
   Card,
@@ -317,6 +319,7 @@ export default function Future() {
   const health = useAsync(() => api.health(), []);
   const tree = useAsync(() => api.futureTree(DEFAULT_USER_ID), []);
   const meta = useAsync(() => api.meta(), []);
+  const [drawerPid, setDrawerPid] = useState<string | null>(null);
 
   // 校准阶段门槛：三阶段（cold 基线校准 → explore 信号实证 → formal 正式预测）
   const calibration = (
@@ -372,12 +375,17 @@ export default function Future() {
   const engineOk = health.data
     ? Object.values(health.data.engines).filter((e) => e.available).length
     : 0;
-  const engineTotal = health.data ? Object.keys(health.data.engines).length : 7;
+  const engineTotal = health.data ? Object.keys(health.data.engines).length : 8;
 
   const renderRow = (p: (typeof visible)[number], isResearch = false) => {
     const accent = DOMAIN_ACCENT[p.domain];
     return (
-    <li key={p.prediction_id} className="row-hover relative rounded-lg border border-line p-3 pl-4">
+    <li
+      key={p.prediction_id}
+      className="row-hover relative cursor-pointer rounded-lg border border-line p-3 pl-4 transition-colors hover:border-gilt-500/40"
+      onClick={() => setDrawerPid(p.prediction_id)}
+      title="点击查看信号与冻结详情"
+    >
       {/* 域色渐变边条 + 域字小印（罗盘一脉相承的章感） */}
       <i
         aria-hidden
@@ -508,25 +516,40 @@ export default function Future() {
         }
       />
 
-      {/* 今日锦囊：老黄历（确定性历法派生）+ 幸运元素 + 情缘星 */}
+      {/* 待批引导前置：有到期预测时首屏即可进入批复流 */}
+      {(due.data?.count ?? 0) > 0 && (
+        <div className="animate-fade-up flex items-center justify-between gap-3 rounded-xl border border-gilt-500/40 bg-gilt-500/[0.05] px-4 py-3">
+          <div className="flex min-w-0 items-center gap-3">
+            <Badge tone="gilt">待批 {due.data!.count}</Badge>
+            <span className="truncate text-sm text-t1">
+              有 {due.data!.count} 条预测已到期，等你批复裁决 —— 每条批复都在为可靠度矩阵积累实证
+            </span>
+          </div>
+          <Link to="/verify" className="shrink-0">
+            <PrimaryButton className="text-xs">去验证</PrimaryButton>
+          </Link>
+        </div>
+      )}
+
+      {/* 今日卡：锦囊 + 日卦 + 本日参读 一卡聚合（round 19 UI 升级） */}
       {daily.data && (
         <Card
           className="frame-flow overflow-hidden"
-          title={`今日锦囊 · ${daily.data.day_ganzhi}日 · ${daily.data.lunar_date}`}
-          subtitle={`值神 ${daily.data.day_god} · 冲${daily.data.chong} 煞${daily.data.sha_direction} · 传统民俗参考`}
+          title={`今日 · ${daily.data.day_ganzhi}日 · ${daily.data.lunar_date}`}
+          subtitle={`值神 ${daily.data.day_god} · 冲${daily.data.chong} 煞${daily.data.sha_direction}`}
           right={
             daily.data.peach_activated && daily.data.peach_activated.length > 0 ? (
               <Badge tone="good">❀ {daily.data.peach_activated.join('、')}</Badge>
             ) : undefined
           }
         >
-          {/* 鎏金氛围光 + 星点明灭（aura-gilt 若与流光边框同设会被覆盖，改作内嵌层） */}
           <div aria-hidden className="aura-gilt pointer-events-none absolute inset-0" />
           <Sparkles count={9} seed={11} />
-          <div className="flex flex-col-reverse gap-4 md:flex-row md:items-start">
-            <div className="grid min-w-0 flex-1 grid-cols-1 gap-3 md:grid-cols-2">
-              <div>
-                <div className="mb-1 text-xs font-medium text-t3">宜</div>
+          <div className="grid gap-4 lg:grid-cols-[1fr_auto]">
+            {/* 左：宜忌 + 吉神 + 幸运元素 */}
+            <div className="min-w-0 space-y-2.5 text-xs text-t2">
+              <div className="grid grid-cols-[auto_1fr] items-start gap-x-3 gap-y-1.5">
+                <span className="pt-0.5 font-medium text-t3">宜</span>
                 <div className="flex flex-wrap gap-1">
                   {daily.data.yi.map((y) => (
                     <Badge key={y} tone="good">
@@ -534,7 +557,7 @@ export default function Future() {
                     </Badge>
                   ))}
                 </div>
-                <div className="mb-1 mt-3 text-xs font-medium text-t3">忌</div>
+                <span className="pt-0.5 font-medium text-t3">忌</span>
                 <div className="flex flex-wrap gap-1">
                   {daily.data.ji.map((j) => (
                     <Badge key={j} tone="bad">
@@ -543,48 +566,44 @@ export default function Future() {
                   ))}
                 </div>
               </div>
-              <div className="space-y-2 text-xs text-t2">
-                <div className="flex flex-wrap gap-x-4 gap-y-1">
-                  <span>
-                    喜神 <b className="text-t1">{daily.data.xi_dir}</b>
-                  </span>
-                  <span>
-                    财神 <b className="text-t1">{daily.data.cai_dir}</b>
-                  </span>
-                  <span>
-                    福神 <b className="text-t1">{daily.data.fu_dir}</b>
-                  </span>
-                </div>
-                <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span>幸运色</span>
-                  <ColorSwatches text={daily.data.lucky_color} />
-                  <span className="text-t4">（辅</span>
-                  <ColorSwatches text={daily.data.lucky_color_aux} size={10} />
-                  <span className="text-t4">）</span>
-                  <span className="ml-2">
-                    幸运数{' '}
-                    <b className="text-gt">{daily.data.lucky_numbers.join('、')}</b>
-                  </span>
-                </div>
+              <div className="flex flex-wrap gap-x-4 gap-y-1">
+                <span>
+                  喜神 <b className="text-t1">{daily.data.xi_dir}</b>
+                </span>
+                <span>
+                  财神 <b className="text-t1">{daily.data.cai_dir}</b>
+                </span>
+                <span>
+                  福神 <b className="text-t1">{daily.data.fu_dir}</b>
+                </span>
+                <span>
+                  幸运数 <b className="text-gt">{daily.data.lucky_numbers.join('、')}</b>
+                </span>
+              </div>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <span>幸运色</span>
+                <ColorSwatches text={daily.data.lucky_color} />
+                <span className="text-t4">（辅</span>
+                <ColorSwatches text={daily.data.lucky_color_aux} size={10} />
+                <span className="text-t4">）</span>
                 {daily.data.day_master && (
-                  <div className="text-t3">
+                  <span className="text-t3">
                     日主{daily.data.day_master}（{daily.data.day_master_wuxing}）x 今日
                     {daily.data.day_master_relation}
-                  </div>
+                  </span>
                 )}
-                <div>
-                  吉时{' '}
-                  {daily.data.lucky_hours.map((h) => (
-                    <span key={h} className="mr-2 text-t2">
-                      {h}
-                    </span>
-                  ))}
-                </div>
-                <div className="text-t4">彭祖百忌：{daily.data.pengzu.join('；')}</div>
+              </div>
+              <div>
+                吉时{' '}
+                {daily.data.lucky_hours.map((h) => (
+                  <span key={h} className="mr-2">
+                    {h}
+                  </span>
+                ))}
               </div>
             </div>
-            {/* 罗盘：慢转八卦环 + 太极 + 三神方位点亮，锦囊卡的视觉锚 */}
-            <div className="mx-auto md:mx-0 md:mt-1">
+            {/* 右：罗盘（视觉锚） */}
+            <div className="mx-auto lg:mx-0">
               <AlmanacDial
                 xi={daily.data.xi_dir}
                 cai={daily.data.cai_dir}
@@ -592,69 +611,68 @@ export default function Future() {
               />
             </div>
           </div>
-        </Card>
-      )}
 
-      {/* 日卦 · 命数 · 未来事件三合一参读：与今日锦囊同源确定性派生，秒出 */}
-      {daily.data?.daily_gua && (
-        <Card
-          className="frame-flow canon-tile"
-          title={`日卦 · ${daily.data.daily_gua.name}`}
-          subtitle="周易经文参读 · 日粒度确定性起卦 · 同日并列参读，非因果，非效力宣称"
-        >
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="flex items-center gap-3 sm:flex-col sm:gap-2">
-              <HexGlyph
-                lines={daily.data.daily_gua.lines}
-                moving={daily.data.daily_gua.moving_yao}
-              />
-              <span className="font-serif text-2xl font-semibold text-gt">
-                {daily.data.daily_gua.short}
-              </span>
-              <Badge tone="gilt">动爻·第{daily.data.daily_gua.moving_yao}爻</Badge>
-            </div>
-            <div className="min-w-0 flex-1 space-y-2 text-sm leading-relaxed text-t2">
-              {daily.data.daily_gua.gua_ci && (
-                <p className="font-serif">
-                  <CanonTag label="卦辞" />
-                  {daily.data.daily_gua.gua_ci}
-                </p>
-              )}
-              {daily.data.daily_gua.yao_ci && (
-                <p className="font-serif">
-                  <CanonTag label="动爻" />
-                  {daily.data.daily_gua.yao_ci}
-                </p>
-              )}
-              {daily.data.daily_gua.xiang && (
-                <p className="font-serif text-t3">
-                  <CanonTag label="大象" />
-                  {daily.data.daily_gua.xiang}
-                </p>
-              )}
-            </div>
-          </div>
-          {/* 命数结合：卦之上下卦五行 × 日主强弱喜忌（有出生档案时） */}
-          {daily.data.daily_gua.natal_notes &&
-            daily.data.daily_gua.natal_notes.length > 0 && (
-              <div className="mt-3 rounded-xl border border-line bg-panel p-3">
-                <div className="mb-1.5 flex items-center gap-2 text-xs font-medium text-gt">
-                  <CanonTag label="命数" />
-                  日主{daily.data.day_master}（{daily.data.day_master_wuxing}）
-                  {daily.data.daily_gua.natal_verdict &&
-                    ` · 日主${daily.data.daily_gua.natal_verdict}`}
+          {/* 日卦（压缩行）+ 命数：折叠保留全文 */}
+          {daily.data.daily_gua && (
+            <div className="mt-3 rounded-xl border border-line bg-panel p-3">
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-10">
+                    <HexGlyph
+                      lines={daily.data.daily_gua.lines}
+                      moving={daily.data.daily_gua.moving_yao}
+                    />
+                  </div>
+                  <div>
+                    <div className="font-serif text-lg font-semibold text-gt">
+                      {daily.data.daily_gua.short}
+                    </div>
+                    <Badge tone="gilt">动爻·第{daily.data.daily_gua.moving_yao}爻</Badge>
+                  </div>
                 </div>
-                <ul className="space-y-1 text-xs leading-relaxed text-t2">
-                  {daily.data.daily_gua.natal_notes.map((n, i) => (
+                <div className="min-w-0 flex-1 space-y-0.5 font-serif text-xs leading-relaxed text-t2">
+                  {daily.data.daily_gua.gua_ci && (
+                    <p className="line-clamp-1" title={daily.data.daily_gua.gua_ci}>
+                      <CanonTag label="卦辞" />
+                      {daily.data.daily_gua.gua_ci}
+                    </p>
+                  )}
+                  {daily.data.daily_gua.yao_ci && (
+                    <p className="line-clamp-1" title={daily.data.daily_gua.yao_ci}>
+                      <CanonTag label="动爻" />
+                      {daily.data.daily_gua.yao_ci}
+                    </p>
+                  )}
+                </div>
+              </div>
+              {(daily.data.daily_gua.natal_notes?.length ?? 0) > 0 && (
+                <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-t3">
+                  <CanonTag label="命数" />
+                  {daily.data.daily_gua.natal_notes![0]}
+                  {(daily.data.daily_gua.natal_notes?.length ?? 0) > 1 && ' ……（展开见全部）'}
+                </p>
+              )}
+              <details className="mt-1.5 text-[11px] text-t4">
+                <summary className="cursor-pointer select-none hover:text-t2">
+                  命数全部批示 · 大象传
+                </summary>
+                <ul className="mt-1.5 space-y-1 text-t2">
+                  {(daily.data.daily_gua.natal_notes ?? []).map((n, i) => (
                     <li key={i}>· {n}</li>
                   ))}
                 </ul>
-              </div>
-            )}
-          {/* 未来事件结合：窗口覆盖本日的在库预测，与卦并列参读 */}
+                {daily.data.daily_gua.xiang && (
+                  <p className="mt-1.5 font-serif text-t3">大象：{daily.data.daily_gua.xiang}</p>
+                )}
+                <p className="mt-1 text-t5">同日并列参读，非因果，非效力宣称。</p>
+              </details>
+            </div>
+          )}
+
+          {/* 本日参读：窗口覆盖本日的在库预测 */}
           {daily.data.related_predictions &&
             daily.data.related_predictions.length > 0 && (
-              <div className="mt-3 rounded-xl border border-line bg-panel p-3">
+              <div className="mt-2.5 rounded-xl border border-line bg-panel p-3">
                 <div className="mb-1.5 flex items-center gap-2 text-xs font-medium text-t3">
                   <CanonTag label="本日参读" />
                   窗口覆盖今天的在库预测（{daily.data.related_predictions.length} 条 · 与卦同日并列，非因果）
@@ -664,7 +682,7 @@ export default function Future() {
                     <span
                       key={p.prediction_id}
                       className="rounded-lg border border-bd bg-card px-2.5 py-1.5 text-xs text-t2"
-                      title={`窗口 ${p.window[0]} ~ ${p.window[1]} · 状态 ${p.status}`}
+                      title={`窗口 ${p.window[0]} ~ ${p.window[1]} · 状态 ${STATUS_LABEL[p.status] ?? p.status}`}
                     >
                       {p.description}
                       <b className="ml-2 text-gt">{pct(p.probability)}</b>
@@ -694,6 +712,8 @@ export default function Future() {
         {/* 七术式推演仪式：生成期间轮转各术式的传统仪程动效 */}
         {(generating || runDone) && <DivinationStage active={generating} done={runDone} />}
       </Card>
+
+      <PredictionDrawer pid={drawerPid} onClose={() => setDrawerPid(null)} />
 
       {notes && (
         <Card
