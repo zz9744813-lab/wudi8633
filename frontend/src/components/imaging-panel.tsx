@@ -2,14 +2,16 @@
  * 影像相学面板：面相/掌纹上传分析。
  *
  * 隐私铁律（与后端 app/services/imaging.py 对齐）：
- * - 默认本地 OpenCV 分析，原图分析后即焚、不入库；
+ * - 默认本地 OpenCV 分析，原图分析后即焚、永不入库；
+ * - 「特征存档」默认开启：仅保存派生特征数值（可随时一键清除），供长期
+ *   参照与预测信号复用；原图与二进制数据任何情况下不入库；
  * - 「云端详批」每一次都要显式勾选，勾选=当次授权把原图发给中转站模型；
  * - 预览用 URL.createObjectURL，仅用 data/blob 本地 URL，不上传预览本身。
  */
 
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-import { api, type ImagingAnalysis } from '../api/client';
+import { DEFAULT_USER_ID, api, type ImagingAnalysis, type ImagingHistoryItem } from '../api/client';
 import { Badge, ErrorBox, GhostButton, PrimaryButton } from './ui';
 
 type Kind = 'palm' | 'face';
@@ -36,6 +38,7 @@ interface SlotState {
   busy: boolean;
   dragOver: boolean;
   useCloud: boolean;
+  save: boolean;
   result: ImagingAnalysis | null;
   error: string | null;
 }
@@ -46,11 +49,12 @@ const EMPTY: SlotState = {
   busy: false,
   dragOver: false,
   useCloud: false,
+  save: true,
   result: null,
   error: null,
 };
 
-function KindSlot({ kind }: { kind: Kind }) {
+function KindSlot({ kind, onSaved }: { kind: Kind; onSaved: () => void }) {
   const meta = KIND_META[kind];
   const [s, setS] = useState<SlotState>(EMPTY);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -87,15 +91,18 @@ function KindSlot({ kind }: { kind: Kind }) {
       form.append('file', s.file);
       form.append('kind', kind);
       form.append('use_cloud', String(s.useCloud));
+      form.append('save', String(s.save));
+      form.append('user_id', String(DEFAULT_USER_ID));
       const result = await api.imagingAnalyze(form);
       set({ result, busy: false });
+      if (result.saved) onSaved();
     } catch (e) {
       set({ busy: false, error: e instanceof Error ? e.message : '分析失败' });
     }
   };
 
   return (
-    <div className="rounded-xl border border-bd bg-panel/60 p-3.5">
+    <div>
       <div className="mb-2.5 flex items-center justify-between">
         <div className="text-xs font-medium text-t1">{meta.title}</div>
         <Badge tone="gilt">本地 CV</Badge>
@@ -148,9 +155,20 @@ function KindSlot({ kind }: { kind: Kind }) {
       {/* 隐私声明 + 云端开关 */}
       <div className="mt-2.5 space-y-1.5">
         <div className="flex flex-wrap gap-1">
-          <Badge tone="good">原图分析后即焚</Badge>
-          <Badge>结果不入库</Badge>
+          <Badge tone="good">原图即焚 · 永不入库</Badge>
         </div>
+        <label className="flex cursor-pointer items-start gap-2 text-[11px] leading-relaxed text-t3">
+          <input
+            type="checkbox"
+            checked={s.save}
+            onChange={(e) => set({ save: e.target.checked })}
+            className="mt-0.5 accent-[#c9a227]"
+          />
+          <span>
+            <strong className="text-t2">特征存档（推荐）</strong>
+            ：保存派生特征数值（不含原图），供长期前后对照，并让相法信号参与预测闭环积累实证。可随时一键清除。
+          </span>
+        </label>
         <label className="flex cursor-pointer items-start gap-2 text-[11px] leading-relaxed text-t3">
           <input
             type="checkbox"
@@ -221,11 +239,77 @@ function KindSlot({ kind }: { kind: Kind }) {
   );
 }
 
-export function ImagingPanel() {
+function ImagingHistory({ kind, refreshKey }: { kind: Kind; refreshKey: number }) {
+  const [items, setItems] = useState<ImagingHistoryItem[]>([]);
+  const [open, setOpen] = useState(false);
+
+  const load = () => {
+    api
+      .imagingHistory(DEFAULT_USER_ID, kind)
+      .then((r) => setItems(r.items))
+      .catch(() => setItems([]));
+  };
+  useEffect(load, [kind, refreshKey]);
+
+  const purge = async () => {
+    await api.imagingPurge(DEFAULT_USER_ID, kind);
+    load();
+  };
+
   return (
-    <div className="grid gap-4 md:grid-cols-2">
-      <KindSlot kind="face" />
-      <KindSlot kind="palm" />
+    <div className="mt-3 border-t border-bd pt-2.5">
+      <div className="flex items-center justify-between text-[11px]">
+        <button
+          className="text-t3 hover:text-t1"
+          onClick={() => setOpen((v) => !v)}
+        >
+          历史存档（{items.length} 条）{open ? ' ▲' : ' ▼'}
+        </button>
+        {items.length > 0 && (
+          <button className="text-t5 hover:text-cinnabar-400" onClick={purge}>
+            清除全部
+          </button>
+        )}
+      </div>
+      {open && (
+        <ul className="mt-2 space-y-1.5">
+          {items.length === 0 && (
+            <li className="text-[11px] text-t5">还没有存档特征。分析时勾选「特征存档」即可积累。</li>
+          )}
+          {items.map((it) => (
+            <li
+              key={it.id}
+              className="rounded-lg border border-bd bg-card/60 px-2.5 py-1.5 text-[11px]"
+            >
+              <div className="flex items-center justify-between text-t4">
+                <span className="tabular">{it.captured_at.slice(0, 16).replace('T', ' ')}</span>
+                {!it.detected && <span className="text-amber-500">未检出</span>}
+              </div>
+              {it.reading[0] && (
+                <div className="mt-0.5 line-clamp-2 text-t3">{it.reading[0]}</div>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+export function ImagingPanel() {
+  const [refreshKey, setRefreshKey] = useState(0);
+  return (
+    <div className="space-y-3">
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="rounded-xl border border-bd bg-panel/60 p-3.5">
+          <KindSlot kind="face" onSaved={() => setRefreshKey((k) => k + 1)} />
+          <ImagingHistory kind="face" refreshKey={refreshKey} />
+        </div>
+        <div className="rounded-xl border border-bd bg-panel/60 p-3.5">
+          <KindSlot kind="palm" onSaved={() => setRefreshKey((k) => k + 1)} />
+          <ImagingHistory kind="palm" refreshKey={refreshKey} />
+        </div>
+      </div>
     </div>
   );
 }

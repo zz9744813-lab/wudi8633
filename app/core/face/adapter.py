@@ -47,14 +47,34 @@ class FaceAdapter(MetaphysicalAdapter):
 
     # ------------------------------------------------------------------
     def compute_chart(self, query: AdapterQuery) -> dict[str, Any]:
-        """从本地照片提取 FaceFeatures（第 9 节）。"""
-        if not query.image_path:
-            return {}
-        try:
-            features = extract_face_features(query.image_path)
-        except Exception:
-            return {}
-        return features.to_dict()
+        """面相特征：优先现传照片；无照片时回退最近一次存档特征（round 17）。"""
+        if query.image_path:
+            try:
+                return extract_face_features(query.image_path).to_dict()
+            except Exception:
+                pass
+        if query.session is not None:
+            try:
+                from sqlmodel import select
+
+                from app.models.metaphysical import FaceFeature
+
+                row = query.session.exec(
+                    select(FaceFeature)
+                    .where(
+                        FaceFeature.user_id == query.user_id,
+                        FaceFeature.degraded == False,  # noqa: E712
+                    )
+                    .order_by(FaceFeature.captured_at.desc())
+                ).first()
+                if row and row.features:
+                    out = dict(row.features)
+                    out["from_store"] = True
+                    out["store_captured_at"] = row.captured_at.isoformat()
+                    return out
+            except Exception:
+                pass
+        return {}
 
     # ------------------------------------------------------------------
     def to_signals(self, query: AdapterQuery, chart: dict[str, Any]) -> list[Signal]:

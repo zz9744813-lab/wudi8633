@@ -275,6 +275,15 @@ export const api = {
     ),
 
   /** 影像相学分析（面相/掌纹）。multipart 直传，后端默认不存图不发云。 */
+  imagingHistory: (userId: number, kind: 'palm' | 'face') =>
+    get<{ kind: string; items: ImagingHistoryItem[] }>(
+      `/api/imaging/history?user_id=${userId}&kind=${kind}`,
+    ),
+  imagingPurge: (userId: number, kind?: 'palm' | 'face') =>
+    request<{ deleted: number }>(
+      `/api/imaging/records?user_id=${userId}${kind ? `&kind=${kind}` : ''}`,
+      { method: 'DELETE' },
+    ),
   imagingAnalyze: (form: FormData) =>
     request<ImagingAnalysis>('/api/imaging/analyze', {
       method: 'POST',
@@ -315,10 +324,23 @@ export interface ImagingAnalysis {
   features: Record<string, unknown>;
   reading: string[];
   cloud: { used: boolean; text?: string; model?: string; duration_ms?: number; reason?: string };
+  saved?: boolean;
+  record_id?: number | null;
   privacy: {
     original_deleted: boolean;
-    stored: boolean;
+    features_stored?: boolean;
+    stored?: boolean;
     cloud_sent: boolean;
     note: string;
   };
+}
+
+/** 相法特征存档（GET /api/imaging/history） */
+export interface ImagingHistoryItem {
+  id: number;
+  kind: 'palm' | 'face';
+  captured_at: string;
+  detected: boolean;
+  features: Record<string, unknown>;
+  reading: string[];
 }

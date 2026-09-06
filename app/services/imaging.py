@@ -217,3 +217,77 @@ def cloud_reading(data: bytes, mime: str, kind: str) -> dict[str, Any]:
         "duration_ms": resp.duration_ms,
         "system_prompt": _VISION_RULES,
     }
+
+
+# ----------------------------------------------------------------------
+# 特征存档（round 17）：原图即焚不变，派生特征经用户确认后入库供长期参照
+# 与信号闭环复用。表中 local_image_path 恒为 None（绝不存原图路径）。
+# ----------------------------------------------------------------------
+def save_record(session, user_id: int, kind: str, features: dict, detected: bool) -> int:
+    from app.models.metaphysical import FaceFeature, PalmFeature
+
+    detected = bool(features.get("detected", detected))
+    kwargs = dict(
+        user_id=user_id,
+        features=features,
+        degraded=not detected,
+        degrade_reason=None if detected else "未检出",
+        local_image_path=None,  # 隐私铁律：原图即焚，路径不入库
+    )
+    if kind == "palm":
+        rec = PalmFeature(engine_version="palm-cv", **kwargs)
+    else:
+        rec = FaceFeature(engine_version="face-cv", **kwargs)
+    session.add(rec)
+    session.commit()
+    session.refresh(rec)
+    return rec.id
+
+
+def list_records(session, user_id: int, kind: str, limit: int = 12) -> list[dict]:
+    """历史特征列表；解读文案由特征确定性重生成（_palm_lines/_face_lines）。"""
+    from sqlalchemy import desc
+
+    from app.models.metaphysical import FaceFeature, PalmFeature
+    from sqlmodel import select
+
+    model = PalmFeature if kind == "palm" else FaceFeature
+    rows = session.exec(
+        select(model)
+        .where(model.user_id == user_id)
+        .order_by(desc(model.captured_at))
+        .limit(limit)
+    ).all()
+    out = []
+    for r in rows:
+        feats = r.features or {}
+        lines = _palm_lines(feats) if kind == "palm" else _face_lines(feats)
+        out.append(
+            {
+                "id": r.id,
+                "kind": kind,
+                "captured_at": r.captured_at.isoformat(),
+                "detected": not r.degraded,
+                "features": feats,
+                "reading": lines,
+            }
+        )
+    return out
+
+
+def purge_records(session, user_id: int, kind: str | None = None) -> int:
+    from app.models.metaphysical import FaceFeature, PalmFeature
+    from sqlmodel import select
+
+    n = 0
+    for model, k in ((PalmFeature, "palm"), (FaceFeature, "face")):
+        if kind and k != kind:
+            continue
+        rows = session.exec(
+            select(model).where(model.user_id == user_id)
+        ).all()
+        for r in rows:
+            session.delete(r)
+            n += 1
+    session.commit()
+    return n

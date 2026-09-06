@@ -43,14 +43,38 @@ class PalmAdapter(MetaphysicalAdapter):
 
     # ------------------------------------------------------------------
     def compute_chart(self, query: AdapterQuery) -> dict[str, Any]:
-        """从本地照片提取 PalmFeatures（第 8.1 节）。"""
-        if not query.image_path:
-            return {}
-        try:
-            features = extract_palm_features(query.image_path)
-        except Exception:
-            return {}
-        return features.to_dict()
+        """掌纹特征：优先现传照片；无照片时回退最近一次存档特征（round 17）。
+
+        存档特征让掌纹信号无需每次传图即可持续参与预测闭环、积累验证样本。
+        """
+        if query.image_path:
+            try:
+                return extract_palm_features(query.image_path).to_dict()
+            except Exception:
+                pass
+        # 存档回退：最近一次 PalmFeature（原图从未入库，仅特征数值）
+        if query.session is not None:
+            try:
+                from sqlmodel import select
+
+                from app.models.metaphysical import PalmFeature
+
+                row = query.session.exec(
+                    select(PalmFeature)
+                    .where(
+                        PalmFeature.user_id == query.user_id,
+                        PalmFeature.degraded == False,  # noqa: E712
+                    )
+                    .order_by(PalmFeature.captured_at.desc())
+                ).first()
+                if row and row.features:
+                    out = dict(row.features)
+                    out["from_store"] = True
+                    out["store_captured_at"] = row.captured_at.isoformat()
+                    return out
+            except Exception:
+                pass
+        return {}
 
     # ------------------------------------------------------------------
     def to_signals(self, query: AdapterQuery, chart: dict[str, Any]) -> list[Signal]:
