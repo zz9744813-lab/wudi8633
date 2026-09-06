@@ -24,7 +24,7 @@ Prediction → Freeze → Reality → Verify → Score → Diagnose → Learn �
 | 项 | 值 |
 |---|---|
 | 完成度 | **方案 v1.0 十项验收标准（PRED-01…EXP-01）全部达成** |
-| 测试 | `136 passed, 2 skipped`（全绿；round 10-15 累计新增 40 项；弃用警告已清零，仅余 1 条 FastAPI 自身提示） |
+| 测试 | `147 passed, 2 skipped`（全绿；round 10-18 累计新增 51 项；弃用警告已清零，仅余 1 条 FastAPI 自身提示） |
 | 公众人物回测 | `tools/backtest_figures.py`（round 16 扩至 74 人 × 165 事件，负向 13）：年柱 74/74 ✅；**zhouyi 已退出方向投票**（词频基线灌水，经文仍作参读）；liuyao 打分重定心+中性带（41%→p0.19 硬币带）；qimen 人事主断 58%；ziwei 80% 偏正；融合弱先验带 [0.42,0.55]（ziwei 0.55/meihua 0.47/liuyao 0.44/zhouyi 0.42，用户实证 skill 覆盖）；采样时辰伪随机化（固定时辰曾使梅花 77% 负偏）；报告落 docs/回测报告-公众人物.md |
 | 数据库 | SQLite，**38 张表**（+`system_fortune_readings` 紫微批示缓存） |
 | 术式引擎 | 8 个全部真实可跑（八字/紫微/六爻/梅花/周易义理/奇门/掌纹/面相；round 12 新增 zhouyi 义理派：卦辞+爻辞吉凶断辞定向，易卦三法同组去相关） |
@@ -299,6 +299,8 @@ RealityState 扫描 → 候选事件(candidates)
 27. **年柱双口径**（2026-09-06，round 15 回测发现，非 bug 而是必须知道的口径差）：CalendarCore 同时输出 `year_ganzhi`（农历年，正月初一切换，供老黄历/时间起卦）与 `bazi.year`（八字年柱，立春切换，供四柱）。生日在立春与正月初一之间时两者相差一年（如 C罗 1985-02-05：八字乙丑/农历甲子），**各自口径下都正确**。核对/开发时务必先问「要用哪套年」，勿把农历年当八字年柱（回测曾因此误报）。
 
 28. **固定时辰起卦的方向偏斜**（2026-09-06，round 16 审计战果）：梅花/六爻时间起卦的上下卦组合由「年月日(+时)」决定，固定时辰（如全部 12:00 或管线默认 00:00）会把上下卦数差锁死，梅花引擎分布本均匀（10000 次普查 41% 负）但固定午时采样 77% 负、产品子时同样偏斜。修复：pipeline 的 AdapterQuery 传真实本地时辰；回测采样逐事件伪随机时辰。教训：**时间起卦类引擎的「时辰」是分布参数，任何固定采样都会引入方向偏斜**。另：liuyao 旺衰打分实测均值 -0.4（月克/日克权重不对称），已重定心；bazi 强弱阈值 ±2 过宽曾使清晰盘永久沉默，收紧至 ±1.5。
+
+29. **相法测量假数据与 mediapipe 打包**（2026-09-06，round 18 数量级核验战果）：①面相旧实现「三庭/五眼/眉眼/鼻唇颌」全是 Haar 框等分**写死常数**——传谁的照片解读都是「三庭匀称」，千人一面假测量；现改 MediaPipe FaceLandmarker 真关键点（facemesh 不可用时只出真可测的框宽高比，宁缺毋假）。②掌纹 `palm_width_ratio=掌宽/图宽` 随取景漂移无意义，改 Hands 真掌宽/掌长（0.6~0.8）；`_measure_line_group` **投影轴写反**（单条线 length_ratio 恒 0）已修，阈值以合成纹图核验。③mediapipe 1.x **移除 solutions API**，须用 Tasks API + .task 模型文件（Apache 2.0，已入 `app/core/face/assets/`）；**spec 的 excludes 里曾排除 matplotlib**——mediapipe tasks 链路 import matplotlib.pyplot，被排除即 exe 内 ModuleNotFoundError（hiddenimports 打不过 excludes），已从 excludes 移除并显式收集。教训：**数量级核验要测的是「测量数学层」（canonical 输入→已知输出），别只测引擎不测测量**；excludes 名单会静默杀死 hiddenimports。
 
 ## 12. 待优化方向（给接手者的建议，按优先级）
 
