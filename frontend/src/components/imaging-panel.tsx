@@ -225,6 +225,15 @@ function KindSlot({ kind, onSaved }: { kind: Kind; onSaved: () => void }) {
           {!s.result.detected && (
             <Badge tone="warn">未检测到{kind === 'palm' ? '手部' : '人脸'}</Badge>
           )}
+          {/* 测量来源透明化：真关键点 vs 近似，用户应知道当次解读的可信层级 */}
+          {(() => {
+            const src = String(s.result.features.measure_source ?? '');
+            if (src === 'facemesh') return <Badge tone="good">面部关键点真测量</Badge>;
+            if (src === 'hands') return <Badge tone="good">手部关键点真测量</Badge>;
+            if (src.startsWith('haar')) return <Badge tone="warn">仅框比例（精度有限）</Badge>;
+            if (src === 'skin') return <Badge tone="warn">肤色分割近似</Badge>;
+            return null;
+          })()}
           <ul className="space-y-1">
             {s.result.reading.map((line, i) => (
               <li key={i} className="flex gap-1.5 text-xs leading-relaxed text-t2">

@@ -111,15 +111,22 @@ def _face_lines(f: dict[str, Any]) -> list[str]:
                 f"三庭：{best[0]}偏饱满，传统相学视为{focus}较顺的征象；"
                 f"{worst[0]}偏窄，对应阶段的功课补在准备与耐心上。"
             )
+    # 五眼（FaceLandmarker 真测量：五段各/脸宽；传统口径眼距≈一只眼宽）
     five = f.get("five_eyes") or {}
-    spacing = five.get("spacing_ratio", five.get("ratio", 0.0))
-    if spacing:
-        if 0.9 <= spacing <= 1.15:
-            lines.append("五眼：间距匀称，传统相学视为五官舒展、待人接物有亲和力的征象。")
-        elif spacing < 0.9:
-            lines.append("五眼：眼距偏近，传统相学视为专注度集中的征象。")
+    eye_l, eye_r = five.get("left_eye", 0.0), five.get("right_eye", 0.0)
+    bridge = five.get("nose_bridge", 0.0)
+    eye_avg = (eye_l + eye_r) / 2 if (eye_l + eye_r) else 0.0
+    if eye_avg and bridge:
+        if abs(eye_l - eye_r) / eye_avg <= 0.12:
+            lines.append("五眼：双眼左右对称，传统相学视为心性平和、行事有度的征象。")
         else:
-            lines.append("五眼：眼距偏宽，传统相学视为心胸开阔、不钻牛角尖的征象。")
+            lines.append("五眼：双眼宽度略有不对称，传统相学视为性情有侧重的提醒。")
+        if 0.9 <= bridge / eye_avg <= 1.15:
+            lines.append("眼距：约一只眼宽，传统相学视为中和之相、审势公允。")
+        elif bridge / eye_avg > 1.15:
+            lines.append("眼距：偏宽，传统相学视为视野宽、慢热而大条的征象。")
+        else:
+            lines.append("眼距：偏窄，传统相学视为专注敏锐、先做后想的征象。")
     forehead = f.get("forehead_ratio", 0.0)
     if forehead >= 0.34:
         lines.append("额部：宽阔饱满，传统相学视为思维开阔、早慧的征象。")

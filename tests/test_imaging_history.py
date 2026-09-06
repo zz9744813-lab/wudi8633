@@ -100,3 +100,20 @@ def test_adapters_fall_back_to_stored_features(sesh):
     # 无存档的其他用户 → 仍诚实弃权
     q2 = q.model_copy(update={"user_id": 42})
     assert palm.compute_chart(q2) == {}
+
+
+def test_face_lines_consume_real_five_eyes():
+    """round 18 回归：面相解读必须消费 FaceLandmarker 的五段真测量（旧键已废）。"""
+    from app.services.imaging import _face_lines
+
+    f = {
+        "detected": True,
+        "three_halves": {"upper": 0.31, "middle": 0.33, "lower": 0.36},
+        "five_eyes": {"left_temple": 0.17, "left_eye": 0.21, "nose_bridge": 0.22,
+                      "right_eye": 0.19, "right_temple": 0.21},
+        "forehead_ratio": 0.31, "face_width_height_ratio": 0.72,
+        "nose_ratio": 0.33, "lip_ratio": 0.18, "jaw_ratio": 0.36,
+    }
+    lines = _face_lines(f)
+    assert any("五眼" in x for x in lines), "五眼文案应消费真测量"
+    assert any("眼距" in x for x in lines)
