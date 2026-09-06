@@ -660,22 +660,49 @@ export default function Charts() {
         }
       />
 
+      {/* 章节锚点导航：命盘页内容长，吸顶小字快速跳转 */}
+      <nav className="sticky top-2 z-20 flex flex-wrap gap-1.5 rounded-xl border border-line bg-page/90 px-2.5 py-2 backdrop-blur">
+        {(
+          [
+            ['#charts-reading', '八字批示'],
+            ['#charts-ziwei', '紫微批盘'],
+            ['#charts-engines', '术式引擎'],
+            ['#charts-imaging', '影像相法'],
+            ['#charts-calendar', '历法快照'],
+            ['#charts-lineage', '预测血缘'],
+          ] as const
+        ).map(([href, label]) => (
+          <a
+            key={href}
+            href={href}
+            className="rounded-full border border-line px-2.5 py-0.5 text-[11px] text-t4 transition-colors hover:border-gilt-400/60 hover:text-t1"
+          >
+            {label}
+          </a>
+        ))}
+      </nav>
+
       {/* 命理批示（核心展示） */}
-      {fortune.loading && <RitualLoading engine="bazi" label="正在排盘并生成命理批示（推理模型思考 + 正文，约 2-3 分钟，请耐心等待）…" />}
-      {fortune.error && <ErrorBox message={fortune.error} />}
-      {!fortune.loading && !fortune.error && fortune.data && (
-        <FortuneSection data={fortune.data} />
-      )}
+      <div id="charts-reading" className="scroll-mt-20">
+        {fortune.loading && <RitualLoading engine="bazi" label="正在排盘并生成命理批示（推理模型思考 + 正文，约 2-3 分钟，请耐心等待）…" />}
+        {fortune.error && <ErrorBox message={fortune.error} />}
+        {!fortune.loading && !fortune.error && fortune.data && (
+          <FortuneSection data={fortune.data} />
+        )}
+      </div>
 
       {/* 紫微批示（与八字并列的第二条解读线） */}
-      <ZiweiSection
-        data={ziwei.data}
-        loading={ziwei.loading}
-        error={ziwei.error}
-        onRefresh={() => setZiweiNonce((n) => n + 1)}
-      />
+      <div id="charts-ziwei" className="scroll-mt-20">
+        <ZiweiSection
+          data={ziwei.data}
+          loading={ziwei.loading}
+          error={ziwei.error}
+          onRefresh={() => setZiweiNonce((n) => n + 1)}
+        />
+      </div>
 
       {/* 术式引擎 */}
+      <div id="charts-engines" className="scroll-mt-20">
       <Card
         title="术式引擎"
         subtitle="第 53 节：通过 Adapter 接入，输出统一 Signal。未接入的诚实降级，绝不假装可用"
@@ -706,8 +733,10 @@ export default function Charts() {
           ))}
         </div>
       </Card>
+      </div>
 
       {/* 影像相学：面相 / 掌纹上传分析（隐私：原图即焚，默认不上云） */}
+      <div id="charts-imaging" className="scroll-mt-20">
       <Card
         className="frame-flow"
         title="影像相法"
@@ -715,8 +744,10 @@ export default function Charts() {
       >
         <ImagingPanel />
       </Card>
+      </div>
 
       {/* 历法快照 */}
+      <div id="charts-calendar" className="scroll-mt-20">
       <Card
         title="历法内核快照"
         subtitle="第 6 节：所有术式共享同一个 Calendar Core，禁止各模块自己算日期"
@@ -789,8 +820,10 @@ export default function Charts() {
           </div>
         )}
       </Card>
+      </div>
 
       {/* 预测血缘 */}
+      <div id="charts-lineage" className="scroll-mt-20">
       <Card
         title="预测血缘"
         subtitle="第 80 节：任意一条预测都能追溯到候选 / 信号 / 规则 / Agent / Prompt / 模型"
@@ -884,6 +917,7 @@ export default function Charts() {
           </div>
         )}
       </Card>
+      </div>
     </div>
   );
 }

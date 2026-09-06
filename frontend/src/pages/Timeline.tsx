@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react';
+
 import { api, DEFAULT_USER_ID } from '../api/client';
 import {
   Badge,
@@ -18,9 +20,35 @@ import { useAsync } from '../lib/useAsync';
  *   默认必须同时展示：成功 / 失败 / 部分 / 无法判断
  *   禁止产品设计诱导只看「神预测」。
  */
+const DOMAIN_ZH: Record<string, string> = {
+  career: '职业', money: '财务', study: '学习', social: '社交',
+  relationship: '关系', travel: '出行', project: '项目', habit: '习惯',
+  purchase: '消费', communication: '沟通', schedule: '日程',
+  unexpected_event: '意外',
+};
+
+type ResultFilter = 'all' | 'hit' | 'partial' | 'miss';
+
 export default function Timeline() {
   const hist = useAsync(() => api.history(DEFAULT_USER_ID), []);
   const items = hist.data?.items ?? [];
+
+  // 结果与领域双维筛选：默认「全部」——第 51 节不许只展示成功
+  const [resultFilter, setResultFilter] = useState<ResultFilter>('all');
+  const [domainFilter, setDomainFilter] = useState<string>('all');
+
+  const domains = useMemo(
+    () => [...new Set(items.map((i) => i.event_type.split('.')[0]))].sort(),
+    [items],
+  );
+
+  const filtered = items.filter((i) => {
+    if (domainFilter !== 'all' && !i.event_type.startsWith(`${domainFilter}.`)) return false;
+    if (resultFilter === 'hit') return i.outcome === 1;
+    if (resultFilter === 'partial') return i.outcome > 0 && i.outcome < 1;
+    if (resultFilter === 'miss') return i.outcome === 0;
+    return true;
+  });
 
   const full = items.filter((i) => i.outcome === 1).length;
   const partial = items.filter((i) => i.outcome > 0 && i.outcome < 1).length;
@@ -47,14 +75,72 @@ export default function Timeline() {
         title="全部结果"
         subtitle="第 51 节：不得隐藏失败预测；命中率只是直观数据，质量以概率评分与校准为准"
       >
+        {/* 筛选 chips：结果维度 */}
+        {items.length > 0 && (
+          <div className="mb-3 flex flex-wrap items-center gap-1.5">
+            {(
+              [
+                ['all', '全部'],
+                ['hit', '命中'],
+                ['partial', '部分'],
+                ['miss', '未中'],
+              ] as const
+            ).map(([k, label]) => (
+              <button
+                key={k}
+                onClick={() => setResultFilter(k)}
+                className={`rounded-full border px-2.5 py-0.5 text-[11px] transition-colors ${
+                  resultFilter === k
+                    ? 'border-gilt-400/60 bg-gilt-500/10 text-gt'
+                    : 'border-line text-t4 hover:text-t2'
+                }`}
+              >
+                {label}
+                {k === 'hit' ? ` ${full}` : k === 'partial' ? ` ${partial}` : k === 'miss' ? ` ${none}` : ` ${items.length}`}
+              </button>
+            ))}
+            {domains.length > 1 && (
+              <>
+                <span className="mx-1 h-3 w-px bg-line" />
+                <button
+                  onClick={() => setDomainFilter('all')}
+                  className={`rounded-full border px-2.5 py-0.5 text-[11px] transition-colors ${
+                    domainFilter === 'all'
+                      ? 'border-gilt-400/60 bg-gilt-500/10 text-gt'
+                      : 'border-line text-t4 hover:text-t2'
+                  }`}
+                >
+                  全部领域
+                </button>
+                {domains.map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDomainFilter(d)}
+                    className={`rounded-full border px-2.5 py-0.5 text-[11px] transition-colors ${
+                      domainFilter === d
+                        ? 'border-gilt-400/60 bg-gilt-500/10 text-gt'
+                        : 'border-line text-t4 hover:text-t2'
+                    }`}
+                  >
+                    {DOMAIN_ZH[d] ?? d}
+                  </button>
+                ))}
+              </>
+            )}
+          </div>
+        )}
+
         {hist.loading && <Loading />}
         {hist.error && <ErrorBox message={hist.error} />}
         {!hist.loading && !hist.error && items.length === 0 && (
           <EmptyState>还没有已验证的预测。先去「验证」页提交结果。</EmptyState>
         )}
+        {!hist.loading && !hist.error && items.length > 0 && filtered.length === 0 && (
+          <EmptyState>该筛选下没有记录。</EmptyState>
+        )}
 
         <ul className="divide-y divide-line">
-          {items.map((it) => (
+          {filtered.map((it) => (
             <li
               key={it.prediction_id}
               className="row-hover -mx-2 flex items-center gap-4 rounded-lg px-2 py-2.5"

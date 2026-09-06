@@ -227,6 +227,22 @@ export const api = {
       `/api/analytics/ablation${userId ? `?user_id=${userId}` : ''}`,
     ),
 
+  /** 公众人物回测静态产物（只读，模型页回测页签） */
+  backtest: () =>
+    get<{
+      available: boolean;
+      note?: string;
+      figures?: number;
+      pillar_ok?: number;
+      n_events?: number;
+      n_positive?: number;
+      per_source?: Record<
+        string,
+        { hit: number; miss: number; abstain: number; error: number; coverage: number; hit_rate: number | null; p_value: number }
+      >;
+      caveat?: string;
+    }>('/api/analytics/backtest'),
+
   futureTree: (userId: number, asOf?: string) =>
     get<{
       as_of: string;

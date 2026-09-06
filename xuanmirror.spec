@@ -16,6 +16,8 @@ from PyInstaller.utils.hooks import collect_data_files, collect_dynamic_libs, co
 datas = [
     ("frontend/dist", "dist"),
     ("app/core/face/assets", "app/core/face/assets"),
+    # 公众人物回测静态产物（模型页回测页签只读展示）
+    ("docs/回测数据-公众人物.json", "docs"),
 ]
 
 hiddenimports = ["python_multipart"]

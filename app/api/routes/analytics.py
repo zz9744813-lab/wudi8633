@@ -356,3 +356,63 @@ def _load_rows(
         )
         for s in session.exec(stmt).all()
     ]
+
+
+# ======================================================================
+# 公众人物回测（静态产物只读）
+# ======================================================================
+@router.get("/analytics/backtest")
+def public_figure_backtest():
+    """tools/backtest_figures.py 最近一次跑出的 74 人 × 165 事件回测结果。
+
+    只读静态产物（docs/回测数据-公众人物.json），不在请求时重算。结果用于发现
+    系统性 bug 与校准种子，不构成术式预测力证明（C-006）：数据集正向偏置，
+    命中率须联合正向倾向解读。
+    """
+    import json
+    import math
+    import sys
+    from pathlib import Path
+
+    candidates = []
+    repo = Path(__file__).resolve().parents[3] / "docs" / "回测数据-公众人物.json"
+    candidates.append(repo)
+    meipass = getattr(sys, "_MEIPASS", None)
+    if meipass:
+        candidates.append(Path(meipass) / "docs" / "回测数据-公众人物.json")
+        candidates.append(Path(meipass).parent / "docs" / "回测数据-公众人物.json")
+
+    path = next((p for p in candidates if p.exists()), None)
+    if path is None:
+        return {"available": False, "note": "未找到回测产物（PyInstaller 包应含 docs/回测数据-公众人物.json）"}
+
+    data = json.loads(path.read_text(encoding="utf-8"))
+
+    def binom_two_sided_p(k: int, n: int) -> float:
+        """精确二项双侧检验 P(X <= k) * 2 截断到 1，H0: p=0.5。"""
+        if n == 0:
+            return 1.0
+        k = min(k, n - k)
+        p = sum(math.comb(n, i) for i in range(0, k + 1)) * (0.5 ** n) * 2
+        return min(1.0, p)
+
+    per_source = {}
+    for src, b in (data.get("per_source") or {}).items():
+        n = b["hit"] + b["miss"]
+        per_source[src] = {
+            **b,
+            "coverage": (n / max(1, n + b["abstain"] + b["error"])),
+            "hit_rate": (b["hit"] / n) if n else None,
+            "p_value": binom_two_sided_p(b["hit"], n),
+        }
+
+    pillars = data.get("pillars") or []
+    return {
+        "available": True,
+        "figures": len(pillars),
+        "pillar_ok": sum(1 for p in pillars if p.get("ok")),
+        "n_events": data.get("n_events", 0),
+        "n_positive": data.get("n_positive", 0),
+        "per_source": per_source,
+        "caveat": "正向事件占多数，命中率须联合正向倾向解读；不构成术式效力证明（C-006）",
+    }

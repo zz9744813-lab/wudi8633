@@ -272,6 +272,96 @@ function KindSlot({ kind, onSaved }: { kind: Kind; onSaved: () => void }) {
   );
 }
 
+// ---- 纵向对比：存档特征的趋势与最新差分（round 19 UI P1-3）----
+
+const numVal = (v: unknown): number | null =>
+  typeof v === 'number' && Number.isFinite(v) ? v : null;
+
+const METRICS: Record<
+  Kind,
+  { key: string; label: string; get: (f: Record<string, any>) => number | null }[]
+> = {
+  face: [
+    { key: 'wh', label: '脸宽长比', get: (f) => numVal(f.face_width_height_ratio) },
+    { key: 'forehead', label: '上庭', get: (f) => numVal(f.forehead_ratio) },
+    { key: 'nose', label: '中庭', get: (f) => numVal(f.nose_ratio) },
+    { key: 'lip', label: '下庭', get: (f) => numVal(f.lip_ratio) },
+  ],
+  palm: [
+    { key: 'pwr', label: '掌宽长比', get: (f) => numVal(f.palm_width_ratio) },
+    { key: 'life', label: '生命线', get: (f) => numVal(f.life_line?.length_ratio) },
+    { key: 'head', label: '智慧线', get: (f) => numVal(f.head_line?.length_ratio) },
+    { key: 'heart', label: '感情线', get: (f) => numVal(f.heart_line?.length_ratio) },
+  ],
+};
+
+/** 迷你趋势折线（纯 SVG，不给 echarts 增加负担）。值域自适应。 */
+function Sparkline({ values }: { values: (number | null)[] }) {
+  const valid = values.filter((v): v is number => v != null);
+  if (valid.length < 2) return null;
+  const W = 72;
+  const H = 20;
+  const min = Math.min(...valid);
+  const max = Math.max(...valid);
+  const span = max - min || 1;
+  const pts = values
+    .map((v, i) => {
+      if (v == null) return null;
+      const x = (i / (values.length - 1)) * W;
+      const y = H - 2 - ((v - min) / span) * (H - 4);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    })
+    .filter(Boolean)
+    .join(' ');
+  return (
+    <svg width={W} height={H} className="block">
+      <polyline points={pts} fill="none" stroke="currentColor" strokeWidth="1.2" opacity={0.8} />
+    </svg>
+  );
+}
+
+/** 纵向对比块：各指标当前值 + 相对上一次存档的差分 + 趋势折线。 */
+function MetricTrend({ items }: { items: ImagingHistoryItem[] }) {
+  const detected = items.filter((i) => i.detected);
+  if (detected.length < 2) return null;
+  const metrics = METRICS[detected[0].kind];
+  return (
+    <div className="mt-2 rounded-lg border border-bd bg-panel/60 p-2.5">
+      <div className="mb-1.5 text-[10px] font-medium text-t4">
+        纵向对比（{detected.length} 次存档 · Δ 为相对上一次）
+      </div>
+      <ul className="space-y-1">
+        {metrics.map((m) => {
+          // items 为倒序存储，趋势按时间正序画
+          const series = [...detected].reverse().map((i) => m.get(i.features));
+          const valid = series.filter((v): v is number => v != null);
+          const latest = valid.length > 0 ? valid[valid.length - 1] : null;
+          const prev = valid.length > 1 ? valid[valid.length - 2] : null;
+          const delta = latest != null && prev != null ? latest - prev : null;
+          return (
+            <li key={m.key} className="flex items-center gap-2 text-[11px] text-t3">
+              <span className="w-14 shrink-0">{m.label}</span>
+              <Sparkline values={series} />
+              <span className="tabular text-t2">{latest != null ? latest.toFixed(3) : '—'}</span>
+              {delta != null && (
+                <span
+                  className={`tabular ${Math.abs(delta) < 0.005 ? 'text-t5' : delta > 0 ? 'text-jade-400' : 'text-cinnabar-400'}`}
+                >
+                  {delta > 0 ? '↑' : delta < 0 ? '↓' : '≈'}
+                  {Math.abs(delta) >= 0.005 ? Math.abs(delta).toFixed(3) : ''}
+                </span>
+              )}
+            </li>
+          );
+        })}
+      </ul>
+      <p className="mt-1.5 text-[9px] leading-relaxed text-t5">
+        测量受光线/取景影响存在抖动（见 measure_source），小幅波动不构成相学判定。
+      </p>
+    </div>
+  );
+}
+
 function ImagingHistory({ kind, refreshKey }: { kind: Kind; refreshKey: number }) {
   const [items, setItems] = useState<ImagingHistoryItem[]>([]);
   const [open, setOpen] = useState(false);
@@ -308,6 +398,11 @@ function ImagingHistory({ kind, refreshKey }: { kind: Kind; refreshKey: number }
         <ul className="mt-2 space-y-1.5">
           {items.length === 0 && (
             <li className="text-[11px] text-t5">还没有存档特征。分析时勾选「特征存档」即可积累。</li>
+          )}
+          {items.length > 0 && (
+            <li className="list-none">
+              <MetricTrend items={items} />
+            </li>
           )}
           {items.map((it) => (
             <li
