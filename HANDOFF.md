@@ -44,6 +44,7 @@ Prediction → Freeze → Reality → Verify → Score → Diagnose → Learn �
 | 出生档案 | 创建 + `PUT /api/users/{id}/profile` 更新（之前只有 create，2026-08-30 补） |
 | 紫微运限 | `ziwei-0.2.0`：iztro `chart.horoscope()` 流日/流月/流年接入信号层——流年宫宿主本命宫 + 流年干四化（十干四化表）引动本命星，按权重计入方向/强度。时标映射：day→流日、week/month→流月、year→流年 |
 | 前端 | React + TS + Vite，8 个一级页面（未来页=按应验日分组、验证页=批复式、命盘页=八字+紫微十二宫盘） |
+| UI P0（round 19） | 未来页「今日」合并卡（锦囊+日卦+命数+本日参读+待批引导置顶）；预测详情抽屉（prediction-drawer.tsx，portal 到 body：全法盘点六宫格/逐术式信号+证据展开/冻结哈希+一致性+版本血缘/判定结果，Esc/遮罩关闭）；验证页 1-4 键连批判定 + 判定即显 Brier；imaging 路由引擎泄漏修复（全局 db_engine） |
 | git 远端 | `zz9744813-lab/suan` main |
 | 原 NovelForge | 完整镜像备份在 `F:\agi\_suan_backup\suan.git`（含 5 分支+5 PR） |
 
@@ -301,6 +302,7 @@ RealityState 扫描 → 候选事件(candidates)
 28. **固定时辰起卦的方向偏斜**（2026-09-06，round 16 审计战果）：梅花/六爻时间起卦的上下卦组合由「年月日(+时)」决定，固定时辰（如全部 12:00 或管线默认 00:00）会把上下卦数差锁死，梅花引擎分布本均匀（10000 次普查 41% 负）但固定午时采样 77% 负、产品子时同样偏斜。修复：pipeline 的 AdapterQuery 传真实本地时辰；回测采样逐事件伪随机时辰。教训：**时间起卦类引擎的「时辰」是分布参数，任何固定采样都会引入方向偏斜**。另：liuyao 旺衰打分实测均值 -0.4（月克/日克权重不对称），已重定心；bazi 强弱阈值 ±2 过宽曾使清晰盘永久沉默，收紧至 ±1.5。
 
 29. **相法测量假数据与 mediapipe 打包**（2026-09-06，round 18 数量级核验战果）：①面相旧实现「三庭/五眼/眉眼/鼻唇颌」全是 Haar 框等分**写死常数**——传谁的照片解读都是「三庭匀称」，千人一面假测量；现改 MediaPipe FaceLandmarker 真关键点（facemesh 不可用时只出真可测的框宽高比，宁缺毋假）。②掌纹 `palm_width_ratio=掌宽/图宽` 随取景漂移无意义，改 Hands 真掌宽/掌长（0.6~0.8）；`_measure_line_group` **投影轴写反**（单条线 length_ratio 恒 0）已修，阈值以合成纹图核验。③mediapipe 1.x **移除 solutions API**，须用 Tasks API + .task 模型文件（Apache 2.0，已入 `app/core/face/assets/`）；**spec 的 excludes 里曾排除 matplotlib**——mediapipe tasks 链路 import matplotlib.pyplot，被排除即 exe 内 ModuleNotFoundError（hiddenimports 打不过 excludes），已从 excludes 移除并显式收集。教训：**数量级核验要测的是「测量数学层」（canonical 输入→已知输出），别只测引擎不测测量**；excludes 名单会静默杀死 hiddenimports。
+30. **祖先动画 transform 会吞掉 fixed 定位**（2026-09-06，round 19 UI P0 验收战果）：预测抽屉 `position:fixed inset-0` 渲染在滚动容器 MAIN 内，而 R 层有 `animate-fade-up` 类（keyframes 含 transform）的祖先——**任何非 none 的 transform（含恒等矩阵）都使该元素成为 fixed 后代的包含块**，抽屉随滚动偏移 -1214px 出视口，背景可见而文字全在屏外。修复：`createPortal(..., document.body)`。教训：**全屏遮罩类组件一律 portal 到 body**，别信任「fixed=视口」在深层组件树里的约定。
 
 ## 12. 待优化方向（给接手者的建议，按优先级）
 
