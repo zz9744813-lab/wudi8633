@@ -45,6 +45,7 @@ Prediction → Freeze → Reality → Verify → Score → Diagnose → Learn �
 | 紫微运限 | `ziwei-0.2.0`：iztro `chart.horoscope()` 流日/流月/流年接入信号层——流年宫宿主本命宫 + 流年干四化（十干四化表）引动本命星，按权重计入方向/强度。时标映射：day→流日、week/month→流月、year→流年 |
 | 前端 | React + TS + Vite，8 个一级页面（未来页=按应验日分组、验证页=批复式、命盘页=八字+紫微十二宫盘） |
 | UI P0（round 19） | 未来页「今日」合并卡（锦囊+日卦+命数+本日参读+待批引导置顶）；预测详情抽屉（prediction-drawer.tsx，portal 到 body：全法盘点六宫格/逐术式信号+证据展开/冻结哈希+一致性+版本血缘/判定结果，Esc/遮罩关闭）；验证页 1-4 键连批判定 + 判定即显 Brier；imaging 路由引擎泄漏修复（全局 db_engine） |
+| UI P1（round 20） | 模型页双页签（实证矩阵+公众回测：`GET /api/analytics/backtest` 只读 docs/回测数据-公众人物.json，74人×165事件+逐术式命中率+二项 p 值+口径警示，spec datas 已收录）+ 术式增益雷达（echarts radar，skill -1~1 截断 vs Null 0 虚线环）；相法历史纵向对比（特征 SVG 趋势+相对上次差分，≥2 次存档才显示）；时间线结果+领域双维 chips；命盘页吸顶锚点导航 |
 | git 远端 | `zz9744813-lab/suan` main |
 | 原 NovelForge | 完整镜像备份在 `F:\agi\_suan_backup\suan.git`（含 5 分支+5 PR） |
 
