@@ -1,16 +1,17 @@
 import { NavLink, Navigate, Route, Routes, useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { Suspense, lazy, useState } from 'react';
 
 import { api } from './api/client';
 import { useAsync } from './lib/useAsync';
-import Charts from './pages/Charts';
-import Future from './pages/Future';
-import Labs from './pages/Labs';
-import Models from './pages/Models';
-import Rules from './pages/Rules';
-import Settings from './pages/Settings';
-import Timeline from './pages/Timeline';
-import Verify from './pages/Verify';
+// 路由懒加载：echarts 仅实验室/模型页用到，整页级懒加载让首屏不背 1MB 图表包
+const Future = lazy(() => import('./pages/Future'));
+const Verify = lazy(() => import('./pages/Verify'));
+const Timeline = lazy(() => import('./pages/Timeline'));
+const Labs = lazy(() => import('./pages/Labs'));
+const Charts = lazy(() => import('./pages/Charts'));
+const Rules = lazy(() => import('./pages/Rules'));
+const Models = lazy(() => import('./pages/Models'));
+const Settings = lazy(() => import('./pages/Settings'));
 
 /**
  * 第 47 节 UI 信息架构：
@@ -230,21 +231,21 @@ export default function App() {
   return (
     <div className="flex h-full">
       {/* 侧边导航 */}
-      <nav className="relative flex w-56 shrink-0 flex-col border-r border-line bg-page">
+      <nav className="relative flex w-14 shrink-0 flex-col border-r border-line bg-page md:w-56">
         {/* 顶部鎏金光晕 */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-x-0 top-0 h-40 bg-[radial-gradient(60%_100%_at_50%_0%,rgba(217,185,106,0.08),transparent)]"
         />
 
-        <div className="relative flex items-center gap-3 px-5 py-6">
+        <div className="relative flex items-center justify-center gap-3 px-5 py-6 md:justify-start">
           {/* 印章式 Logo：鎏金锥形环 + 玄字 */}
           <div className="relative flex h-9 w-9 items-center justify-center">
             <div className="absolute inset-0 rounded-xl bg-[conic-gradient(from_210deg,#ecd9a0,#8a6d10,#d9b96a,#5c490c,#ecd9a0)] opacity-95 shadow-[0_0_18px_-2px_rgba(201,162,39,0.5)]" />
             <div className="absolute inset-[1.5px] rounded-[10px] bg-page" />
             <span className="text-gilt-grad relative text-lg font-bold leading-none">玄</span>
           </div>
-          <div>
+          <div className="hidden md:block">
             <div className="text-base font-semibold tracking-[0.2em] text-t1">玄鉴</div>
             <div className="text-[10px] tracking-[0.25em] text-t4">XUANMIRROR</div>
           </div>
@@ -253,7 +254,7 @@ export default function App() {
         <div className="relative flex-1 space-y-4 overflow-y-auto px-3">
           {NAV_GROUPS.map((g) => (
             <div key={g.label}>
-              <div className="mb-1 px-3 text-[10px] font-medium tracking-[0.25em] text-t5">
+              <div className="mb-1 hidden px-3 text-[10px] font-medium tracking-[0.25em] text-t5 md:block">
                 {g.label}
               </div>
               <ul className="space-y-0.5">
@@ -283,7 +284,7 @@ export default function App() {
                           >
                             <n.icon />
                           </span>
-                          <span className="flex-1 transition-transform duration-200 group-hover:translate-x-0.5">
+                          <span className="hidden flex-1 transition-transform duration-200 group-hover:translate-x-0.5 md:inline">
                             {n.label}
                           </span>
                         </>
@@ -308,12 +309,13 @@ export default function App() {
         {/* 背景氛围光 */}
         <div
           aria-hidden
-          className="pointer-events-none fixed inset-y-0 right-0 left-56 bg-[radial-gradient(50%_35%_at_70%_0%,rgba(217,185,106,0.05),transparent),radial-gradient(40%_30%_at_20%_100%,rgba(56,130,246,0.04),transparent)]"
+          className="pointer-events-none fixed inset-y-0 right-0 left-14 md:left-56 bg-[radial-gradient(50%_35%_at_70%_0%,rgba(217,185,106,0.05),transparent),radial-gradient(40%_30%_at_20%_100%,rgba(56,130,246,0.04),transparent)]"
         />
         <div className="relative mx-auto max-w-6xl px-6 py-6">
           <OfflineBanner />
           {/* 路由切换时的入场动效 */}
           <div key={location.pathname} className="animate-fade-up space-y-5">
+            <Suspense fallback={<div className="py-20 text-center text-xs text-t4">页面加载中…</div>}>
             <Routes location={location}>
               <Route path="/" element={<Navigate to="/future" replace />} />
               <Route path="/future" element={<Future />} />
@@ -325,6 +327,7 @@ export default function App() {
               <Route path="/models" element={<Models />} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
+            </Suspense>
           </div>
         </div>
       </main>
