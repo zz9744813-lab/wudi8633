@@ -39,6 +39,7 @@ interface SlotState {
   dragOver: boolean;
   useCloud: boolean;
   save: boolean;
+  hand: 'left' | 'right';
   result: ImagingAnalysis | null;
   error: string | null;
 }
@@ -50,6 +51,7 @@ const EMPTY: SlotState = {
   dragOver: false,
   useCloud: false,
   save: true,
+  hand: 'right',
   result: null,
   error: null,
 };
@@ -93,6 +95,7 @@ function KindSlot({ kind, onSaved }: { kind: Kind; onSaved: () => void }) {
       form.append('use_cloud', String(s.useCloud));
       form.append('save', String(s.save));
       form.append('user_id', String(DEFAULT_USER_ID));
+      if (kind === 'palm') form.append('hand', s.hand);
       const result = await api.imagingAnalyze(form);
       set({ result, busy: false });
       if (result.saved) onSaved();
@@ -169,6 +172,27 @@ function KindSlot({ kind, onSaved }: { kind: Kind; onSaved: () => void }) {
             ：保存派生特征数值（不含原图），供长期前后对照，并让相法信号参与预测闭环积累实证。可随时一键清除。
           </span>
         </label>
+        {kind === 'palm' && (
+          <div className="flex items-center gap-2 text-[11px] text-t3">
+            <span>手别：</span>
+            {(['left', 'right'] as const).map((h) => (
+              <button
+                key={h}
+                type="button"
+                onClick={() => set({ hand: h })}
+                className={`rounded-md border px-2 py-0.5 transition-colors ${
+                  s.hand === h
+                    ? 'border-gilt-400 bg-gilt-500/10 text-gt'
+                    : 'border-bd text-t4 hover:text-t2'
+                }`}
+                title={h === 'left' ? '左手（男看先天 / 女看后天）' : '右手（男看后天 / 女看先天）'}
+              >
+                {h === 'left' ? '左手' : '右手'}
+              </button>
+            ))}
+            <span className="text-t5">男左女右互反：常驻预测取后天手</span>
+          </div>
+        )}
         <label className="flex cursor-pointer items-start gap-2 text-[11px] leading-relaxed text-t3">
           <input
             type="checkbox"
@@ -282,7 +306,10 @@ function ImagingHistory({ kind, refreshKey }: { kind: Kind; refreshKey: number }
               className="rounded-lg border border-bd bg-card/60 px-2.5 py-1.5 text-[11px]"
             >
               <div className="flex items-center justify-between text-t4">
-                <span className="tabular">{it.captured_at.slice(0, 16).replace('T', ' ')}</span>
+                <span className="tabular">
+                  {it.captured_at.slice(0, 16).replace('T', ' ')}
+                  {it.hand ? ` · ${it.hand === 'left' ? '左手' : '右手'}` : ''}
+                </span>
                 {!it.detected && <span className="text-amber-500">未检出</span>}
               </div>
               {it.reading[0] && (

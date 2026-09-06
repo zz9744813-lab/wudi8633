@@ -9,7 +9,7 @@
 数据文件（.env / data/）运行期放 exe 同目录。
 """
 
-from PyInstaller.utils.hooks import collect_submodules
+from PyInstaller.utils.hooks import collect_data_files, collect_dynamic_libs, collect_submodules
 
 # 前端构建产物 → 打包进 exe，运行期从 _MEIPASS/dist 读取
 # Haar 人脸级联：本仓库内置副本（cv2 headless 构建不带 data 目录）
@@ -32,16 +32,25 @@ hiddenimports += collect_submodules("fastapi")
 hiddenimports += collect_submodules("pydantic")
 hiddenimports += collect_submodules("sqlmodel")
 
+# MediaPipe（面相 FaceMesh / 掌纹 Hands 真测量）：子模块 + 内置模型 + 原生库
+hiddenimports += collect_submodules("mediapipe")
+# mediapipe 1.x tasks 链路间接 import matplotlib（缺失即 ModuleNotFoundError）
+hiddenimports += collect_submodules("matplotlib")
+hiddenimports += ["matplotlib.pyplot", "matplotlib.backends.backend_agg"]
+datas += collect_data_files("matplotlib")
+datas += collect_data_files("mediapipe")
+binaries_extra = collect_dynamic_libs("mediapipe")
+
 a = Analysis(
     ["launcher.py"],
     pathex=[],
-    binaries=[],
+    binaries=binaries_extra,
     datas=datas,
     hiddenimports=hiddenimports,
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=["tkinter", "matplotlib", "pytest", "ruff"],
+    excludes=["tkinter", "pytest", "ruff"],  # matplotlib 勿排除：mediapipe tasks 链路需要
     noarchive=False,
 )
 

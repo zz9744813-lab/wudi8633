@@ -81,9 +81,10 @@ def _palm_lines(f: dict[str, Any]) -> list[str]:
         lines.append("感情线：浅淡或断续，传统相学视为情感内敛、慢热——不是没有，是不外露。")
 
     ratio = f.get("palm_width_ratio", 0.0)
-    if ratio >= 0.85:
+    # 掌宽/掌长语义（mediapipe 真测量，典型 0.6~0.8；旧「掌宽/图宽」阈值已废）
+    if ratio >= 0.78:
         lines.append("掌型：宽厚方正，传统相学称「土形掌」，重执行、靠得住。")
-    elif ratio and ratio <= 0.7:
+    elif ratio and ratio <= 0.66:
         lines.append("掌型：窄长，传统相学称「木形掌」，善思考、重条理。")
     return lines
 
@@ -223,7 +224,9 @@ def cloud_reading(data: bytes, mime: str, kind: str) -> dict[str, Any]:
 # 特征存档（round 17）：原图即焚不变，派生特征经用户确认后入库供长期参照
 # 与信号闭环复用。表中 local_image_path 恒为 None（绝不存原图路径）。
 # ----------------------------------------------------------------------
-def save_record(session, user_id: int, kind: str, features: dict, detected: bool) -> int:
+def save_record(
+    session, user_id: int, kind: str, features: dict, detected: bool, hand: str = "right"
+) -> int:
     from app.models.metaphysical import FaceFeature, PalmFeature
 
     detected = bool(features.get("detected", detected))
@@ -235,9 +238,9 @@ def save_record(session, user_id: int, kind: str, features: dict, detected: bool
         local_image_path=None,  # 隐私铁律：原图即焚，路径不入库
     )
     if kind == "palm":
-        rec = PalmFeature(engine_version="palm-cv", **kwargs)
+        rec = PalmFeature(engine_version="palm-cv-0.2.0", hand=hand, **kwargs)
     else:
-        rec = FaceFeature(engine_version="face-cv", **kwargs)
+        rec = FaceFeature(engine_version="face-cv-0.2.0", **kwargs)
     session.add(rec)
     session.commit()
     session.refresh(rec)
@@ -268,6 +271,7 @@ def list_records(session, user_id: int, kind: str, limit: int = 12) -> list[dict
                 "kind": kind,
                 "captured_at": r.captured_at.isoformat(),
                 "detected": not r.degraded,
+                "hand": getattr(r, "hand", "") or "",
                 "features": feats,
                 "reading": lines,
             }

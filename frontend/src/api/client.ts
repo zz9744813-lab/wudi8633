@@ -341,6 +341,7 @@ export interface ImagingHistoryItem {
   kind: 'palm' | 'face';
   captured_at: string;
   detected: boolean;
+  hand?: string;
   features: Record<string, unknown>;
   reading: string[];
 }

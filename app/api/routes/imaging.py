@@ -22,6 +22,7 @@ async def analyze_image(
     use_cloud: bool = Form(False),
     save: bool = Form(True),
     user_id: int = Form(1),
+    hand: str = Form("right"),
 ) -> JSONResponse:
     kind = kind.strip().lower()
     if kind not in ("palm", "face"):
@@ -68,9 +69,10 @@ async def analyze_image(
 
             from app.database import get_engine
 
+            hand_v = hand if hand in ("left", "right") else "right"
             with Session(get_engine()) as session:
                 record_id = imaging.save_record(
-                    session, user_id, kind, local["features"], local["detected"]
+                    session, user_id, kind, local["features"], local["detected"], hand=hand_v
                 )
             saved = True
         except Exception:

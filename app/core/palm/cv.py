@@ -37,6 +37,7 @@ class PalmFeatures:
     hand_ratio: float = 0.0
     palm_width_ratio: float = 0.0
     detected: bool = False
+    measure_source: str = ""  # hands / skin（诚实标注测量来源）
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -45,6 +46,7 @@ class PalmFeatures:
             "heart_line": self.heart_line,
             "hand_ratio": round(self.hand_ratio, 3),
             "palm_width_ratio": round(self.palm_width_ratio, 3),
+            "measure_source": self.measure_source,
             "detected": self.detected,
         }
 
@@ -63,7 +65,61 @@ def extract_palm_features(image_path: str) -> PalmFeatures:
     if img is None:
         return features
 
-    # 1. 肤色分割（YCrCb 空间）提取手部
+    # 0. 首选：MediaPipe Hands 真掌宽比（掌宽/掌长，解剖学 0.6~0.8，
+    #    与拍摄距离无关——旧实现 palm_width_ratio=掌宽/图宽 随取景漂移，数量级核验战果）
+    try:
+        import mediapipe as mp
+        from mediapipe.tasks import python as mp_python
+        from mediapipe.tasks.python import vision as mp_vision
+
+        h_img, w_img = img.shape[:2]
+        model_path = Path(__file__).parent.parent / "face" / "assets" / "hand_landmarker.task"
+        landmarker = mp_vision.HandLandmarker.create_from_options(
+            mp_vision.HandLandmarkerOptions(
+                base_options=mp_python.BaseOptions(model_asset_path=str(model_path)),
+                running_mode=mp_vision.RunningMode.IMAGE,
+                num_hands=1,
+                min_hand_detection_confidence=0.5,
+            )
+        )
+        try:
+            mp_img = mp.Image(image_format=mp.ImageFormat.SRGB,
+                              data=cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+            res = landmarker.detect(mp_img)
+        finally:
+            landmarker.close()
+        if not res.hand_landmarks:
+            features.measure_source = "hands-noface"
+        if res.hand_landmarks:
+            lm = res.hand_landmarks[0]
+
+            def _px(i):
+                return (lm[i].x * w_img, lm[i].y * h_img)
+
+            wrist, idx_mcp, pinky_mcp, mid_mcp = _px(0), _px(5), _px(17), _px(9)
+            palm_w = ((idx_mcp[0] - pinky_mcp[0]) ** 2 + (idx_mcp[1] - pinky_mcp[1]) ** 2) ** 0.5
+            palm_l = ((mid_mcp[0] - wrist[0]) ** 2 + (mid_mcp[1] - wrist[1]) ** 2) ** 0.5
+            if palm_l > 0:
+                features.hand_ratio = palm_w / palm_l  # 真掌宽/掌长
+                features.palm_width_ratio = palm_w / palm_l
+                features.measure_source = "hands"
+                features.detected = True
+                xs = [lm[i].x * w_img for i in range(21)]
+                ys = [lm[i].y * h_img for i in range(21)]
+                x0, x1 = max(0, int(min(xs)) - 10), min(w_img, int(max(xs)) + 10)
+                y0, y1 = max(0, int(min(ys)) - 10), min(h_img, int(max(ys)) + 10)
+                edges = _edges_of(img[y0:y1, x0:x1])
+                h_roi, w_roi = edges.shape
+                features.life_line = _measure_line_group(edges, vertical=True, img_h=h_roi)
+                features.head_line = _measure_line_group(edges, vertical=False, img_h=w_roi)
+                features.heart_line = _measure_line_group(
+                    edges, vertical=False, img_h=w_roi, upper=True
+                )
+                return features
+    except Exception as exc:
+        features.measure_source = f"hands-error:{exc}"  # Hands 不可用 → 回退
+
+    # 1. 肤色分割（YCrCb 空间）提取手部（回退路径）
     ycrcb = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
     skin = cv2.inRange(ycrcb, (0, 133, 77), (255, 173, 127))
     skin = cv2.morphologyEx(skin, cv2.MORPH_OPEN, np.ones((5, 5), np.uint8))
@@ -79,10 +135,11 @@ def extract_palm_features(image_path: str) -> PalmFeatures:
     if area / img_area < 0.03:
         return features  # 肤色区域太小，不是手掌
 
-    # 2. 手型比例
+    # 2. 手型比例（回退：仅框比例；掌宽/图宽随取景漂移，宁缺毋假）
     x, y, w, h = cv2.boundingRect(hand)
     features.hand_ratio = w / h if h > 0 else 0.0
-    features.palm_width_ratio = w / img.shape[1] if img.shape[1] > 0 else 0.0
+    if not features.measure_source:
+        features.measure_source = "skin"
 
     # 3. 掌纹线（ROI 内 Canny 边缘 → 最长线段的长度/曲率/连续性近似）
     roi = img[y : y + h, x : x + w]
@@ -95,11 +152,18 @@ def extract_palm_features(image_path: str) -> PalmFeatures:
 
     # 按角度分三组线（生命线/智慧线/感情线的近似方向）
     features.life_line = _measure_line_group(edges, vertical=True, img_h=h)
-    features.head_line = _measure_line_group(edges, vertical=False, img_h=h)
-    features.heart_line = _measure_line_group(edges, vertical=False, img_h=h, upper=True)
+    features.head_line = _measure_line_group(edges, vertical=False, img_h=w)
+    features.heart_line = _measure_line_group(edges, vertical=False, img_h=w, upper=True)
 
     features.detected = True
     return features
+
+
+def _edges_of(roi_img):
+    """ROI 灰度 → Canny 边缘（掌纹线测量的公共入口）。"""
+    gray = cv2.cvtColor(roi_img, cv2.COLOR_BGR2GRAY)
+    blurred = cv2.GaussianBlur(gray, (9, 9), 0)
+    return cv2.dilate(cv2.Canny(blurred, 40, 120), np.ones((3, 3), np.uint8), iterations=1)
 
 
 def _measure_line_group(
@@ -109,11 +173,13 @@ def _measure_line_group(
     h, w = edges.shape
     roi = edges[: h // 2, :] if upper else edges
 
-    # 投影统计线密度
+    # 投影统计线密度：竖直组按行投影（nz=行号 → span=纵向线长），
+    # 水平组按列投影（nz=列号 → span=横向线长）。
+    # 旧实现两轴写反，单条线的 length_ratio 恒为 0（数量级核验战果，勿回退）。
     if vertical:
-        density = roi.sum(axis=0)
-    else:
         density = roi.sum(axis=1)
+    else:
+        density = roi.sum(axis=0)
 
     nz = [i for i, v in enumerate(density) if v > 0]
     if not nz:

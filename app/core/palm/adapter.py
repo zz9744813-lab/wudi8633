@@ -57,16 +57,31 @@ class PalmAdapter(MetaphysicalAdapter):
             try:
                 from sqlmodel import select
 
+                from app.models.core import BirthProfile
                 from app.models.metaphysical import PalmFeature
 
-                row = query.session.exec(
+                # 传统口径：左手看先天、右手看后天，男左女右互反——
+                # 常驻预测信号取「后天手」（男右女左）优先，无则取最新任意手
+                gender = "male"
+                prof = query.session.exec(
+                    select(BirthProfile).where(BirthProfile.user_id == query.user_id)
+                ).first()
+                if prof is not None and prof.gender in ("male", "female"):
+                    gender = prof.gender
+                # 男右女左（后天手）
+                acquired_hand = "right" if gender == "male" else "left"
+                rows = query.session.exec(
                     select(PalmFeature)
                     .where(
                         PalmFeature.user_id == query.user_id,
                         PalmFeature.degraded == False,  # noqa: E712
                     )
                     .order_by(PalmFeature.captured_at.desc())
-                ).first()
+                ).all()
+                row = next(
+                    (r for r in rows if (r.hand or "right") == acquired_hand),
+                    rows[0] if rows else None,
+                )
                 if row and row.features:
                     out = dict(row.features)
                     out["from_store"] = True
