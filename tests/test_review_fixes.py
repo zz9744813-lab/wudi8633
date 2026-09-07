@@ -61,9 +61,33 @@ def test_liuyao_cast_chart_all_hours_no_crash():
 # 3. 六爻性别用神
 # ======================================================================
 def _mk_query(domain, target_time="10:30"):
+    """构造 AdapterQuery 并注入临时库 session + 固定档案作为确定性预言机。
+
+    不注入时 adapter 会回退到全局引擎读开发者真实档案（测试即依赖环境）。
+    """
     from app.core.base import AdapterQuery
+    from app.database import create_db_and_tables, engine as db_engine
+    from app.models.core import BirthProfile
     from app.schemas.signal import TimeScale, TimeWindow
 
+    create_db_and_tables()  # 本文件不走 client 夹具，临时库表需自建
+    session = Session(db_engine)
+    from sqlmodel import select as _sel
+
+    if session.exec(_sel(BirthProfile).where(BirthProfile.user_id == 1)).first() is None:
+        session.add(
+            BirthProfile(
+                user_id=1,
+                solar_birth_date=date(1990, 5, 15),
+                solar_birth_time="14:30",
+                birth_time_known=True,
+                gender="male",
+                birth_place="北京",
+                longitude=116.4,
+                latitude=39.9,
+            )
+        )
+        session.commit()
     start = datetime(2026, 9, 5)
     return AdapterQuery(
         user_id=1,
@@ -73,6 +97,7 @@ def _mk_query(domain, target_time="10:30"):
         window=TimeWindow(start=start, end=start + timedelta(hours=24)),
         target_date=date(2026, 9, 5),
         target_time=target_time,
+        session=session,
     )
 
 
@@ -367,8 +392,11 @@ def test_verify_d_leaves_request_trail(env):
         pytest.skip("无预测可验证")
     pid = items[0]["prediction_id"]
 
-    # 先按 D
-    r1 = client.post(f"/api/predictions/{pid}/verify", params={"quick_answer": "D"})
+    # 先按 D（附言：审计轨迹的一部分）
+    r1 = client.post(
+        f"/api/predictions/{pid}/verify",
+        params={"quick_answer": "D", "user_reply": "现场情况复杂，无法核对"},
+    )
     assert r1.status_code == 200 and r1.json()["status"] == "WAITING_USER"
     with Session(engine) as s:
         reqs = s.exec(
@@ -378,9 +406,11 @@ def test_verify_d_leaves_request_trail(env):
         ).all()
         assert len(reqs) == 1, "按 D 必须留一条验证请求记录"
         assert reqs[0].quick_answer == "D"
+        assert reqs[0].user_reply == "现场情况复杂，无法核对"
         assert reqs[0].answered_at is None
 
-    # 再补 A：复用 D 占的请求行（唯一键不炸），answered_at 补齐
+    # 再补 A：复用 D 占的请求行（唯一键不炸），answered_at 补齐；
+    # 且 D 的裁定与附言不得被抹掉（要追记进轨迹）
     r2 = client.post(f"/api/predictions/{pid}/verify", params={"quick_answer": "A"})
     assert r2.status_code == 200, r2.text
     assert r2.json()["outcome"] == 1.0
@@ -393,6 +423,8 @@ def test_verify_d_leaves_request_trail(env):
         assert len(reqs) == 1, "补批复应复用 D 占的请求行而不是多插一行"
         assert reqs[0].quick_answer == "A"
         assert reqs[0].answered_at is not None
+        assert reqs[0].user_reply == "现场情况复杂，无法核对", "D 的附言不得被覆盖抹掉"
+        assert "先前裁定D" in reqs[0].ambiguity_note, "D 裁定轨迹必须保留在注记里"
 
 
 def test_daily_almanac_short_cache(env):

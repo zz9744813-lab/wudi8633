@@ -8,8 +8,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, Query, UploadFile
 from fastapi.responses import JSONResponse
+from sqlmodel import Session
 
-from app.database import engine as db_engine
 from app.database import get_session
 from app.services import imaging
 
@@ -24,6 +24,7 @@ async def analyze_image(
     save: bool = Form(True),
     user_id: int = Form(1),
     hand: str = Form("right"),
+    session: Session = Depends(get_session),
 ) -> JSONResponse:
     kind = kind.strip().lower()
     if kind not in ("palm", "face"):
@@ -62,19 +63,15 @@ async def analyze_image(
         cloud = imaging.cloud_reading(data, mime, kind)
 
     # 特征存档（原图即焚不变）：派生特征经用户确认后入库，供长期参照与信号闭环
+    # 走依赖注入的 session——测试用例以内存库注入，合成数据绝不写真实库
     saved = False
     record_id = None
     if save:
         try:
-            from sqlmodel import Session
-
-            from app.database import get_engine
-
             hand_v = hand if hand in ("left", "right") else "right"
-            with Session(db_engine) as session:  # 全局单例引擎（勿用 get_engine()：每次新建引擎=句柄泄漏）
-                record_id = imaging.save_record(
-                    session, user_id, kind, local["features"], local["detected"], hand=hand_v
-                )
+            record_id = imaging.save_record(
+                session, user_id, kind, local["features"], local["detected"], hand=hand_v
+            )
             saved = True
         except Exception:
             saved = False  # 存档失败不阻断分析结果

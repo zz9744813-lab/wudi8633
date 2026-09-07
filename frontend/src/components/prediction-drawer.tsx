@@ -8,12 +8,12 @@
  * - 数据全部来自 /api/predictions/{id}，不含任何重建内容。
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 
 import { api, type PredictionDetail, type Signal } from '../api/client';
 import { Badge, ErrorBox, Loading, ProbBar } from './ui';
-import { DOMAIN_LABEL, SCALE_LABEL, pct } from '../lib/format';
+import { DOMAIN_LABEL, SCALE_LABEL, pct, shortDateTime } from '../lib/format';
 
 const SOURCE_ZH: Record<string, string> = {
   ziwei: '紫微',
@@ -27,6 +27,9 @@ const SOURCE_ZH: Record<string, string> = {
   reality: '现实',
   null: '基线',
 };
+
+/** 判定值 → 中文（Brier 口径：1 命中 / 0.5 部分 / 0 未中） */
+const OUTCOME_ZH: Record<number, string> = { 1: '命中', 0.5: '部分命中', 0: '未中' };
 
 /** 全法盘点：源 → ✓同向 / ✗反向 / ○未表态（与后端 rich_description 同口径） */
 function tally(signals: Signal[]): { src: string; mark: string; tone: 'good' | 'bad' | 'default' }[] {
@@ -91,6 +94,7 @@ function SignalBlock({ sig }: { sig: Signal }) {
 export function PredictionDrawer({ pid, onClose }: { pid: string | null; onClose: () => void }) {
   const [detail, setDetail] = useState<PredictionDetail | null>(null);
   const [err, setErr] = useState<string | null>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     if (!pid) return;
@@ -108,6 +112,11 @@ export function PredictionDrawer({ pid, onClose }: { pid: string | null; onClose
     window.addEventListener('keydown', h);
     return () => window.removeEventListener('keydown', h);
   }, [pid, onClose]);
+
+  // 打开即聚焦关闭按钮：键盘/读屏用户不必先穿越背景页
+  useEffect(() => {
+    if (pid) closeRef.current?.focus();
+  }, [pid]);
 
   if (!pid) return null;
 
@@ -134,6 +143,7 @@ export function PredictionDrawer({ pid, onClose }: { pid: string | null; onClose
             </h3>
           </div>
           <button
+            ref={closeRef}
             onClick={onClose}
             className="shrink-0 rounded-md border border-line px-2 py-1 text-xs text-t3 hover:text-t1"
             aria-label="关闭详情"
@@ -162,7 +172,7 @@ export function PredictionDrawer({ pid, onClose }: { pid: string | null; onClose
                 )}
                 <p className="mt-1 text-[11px] text-t4">
                   窗口 {detail.window[0]} ~ {detail.window[1]} · 验证截止{' '}
-                  {detail.verification_due_at ?? '—'}
+                  {shortDateTime(detail.verification_due_at)}
                 </p>
               </div>
 
@@ -242,7 +252,9 @@ export function PredictionDrawer({ pid, onClose }: { pid: string | null; onClose
                 <div className="rounded-xl border border-line bg-panel p-3 text-xs">
                   <div className="mb-1 font-medium text-t2">判定结果</div>
                   <p className="text-t2">
-                    结果 {detail.outcome.outcome} · 置信 {pct(detail.outcome.confidence, 0)}
+                    结果{' '}
+                    {OUTCOME_ZH[detail.outcome.outcome] ?? detail.outcome.outcome} · 置信{' '}
+                    {pct(detail.outcome.confidence, 0)}
                     {detail.outcome.needs_confirmation && ' · 待人工确认'}
                   </p>
                 </div>

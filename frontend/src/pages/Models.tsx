@@ -219,7 +219,7 @@ function BacktestPanel() {
         </tbody>
       </table>
       <p className="text-[11px] leading-relaxed text-t4">
-        {d.caveat} 本表由 tools/backtest_figures.py 静态产出（74 位公众人物 × 165 个公开事件），
+        {d.caveat} 本表由 tools/backtest_figures.py 静态产出（{d.figures} 位公众人物 × {d.n_events} 个公开事件），
         用途是发现系统性 bug 与校准种子——例如「周易文献词频天然偏吉」正是靠本表识破后退出方向投票的。
       </p>
     </div>

@@ -398,12 +398,19 @@ def public_figure_backtest():
 
     per_source = {}
     for src, b in (data.get("per_source") or {}).items():
-        n = b["hit"] + b["miss"]
+        hit = int(b.get("hit", 0) or 0)
+        miss = int(b.get("miss", 0) or 0)
+        abstain = int(b.get("abstain", 0) or 0)
+        error = int(b.get("error", 0) or 0)
+        n = hit + miss
         per_source[src] = {
-            **b,
-            "coverage": (n / max(1, n + b["abstain"] + b["error"])),
-            "hit_rate": (b["hit"] / n) if n else None,
-            "p_value": binom_two_sided_p(b["hit"], n),
+            "hit": hit,
+            "miss": miss,
+            "abstain": abstain,
+            "error": error,
+            "coverage": (n / max(1, n + abstain + error)),
+            "hit_rate": (hit / n) if n else None,
+            "p_value": binom_two_sided_p(hit, n),
         }
 
     pillars = data.get("pillars") or []

@@ -11,7 +11,7 @@ import {
   ProbBar,
   Stat,
 } from '../components/ui';
-import { pct, shortDateTime } from '../lib/format';
+import { DOMAIN_LABEL, pct, shortDateTime } from '../lib/format';
 import { useAsync } from '../lib/useAsync';
 
 /**
@@ -20,12 +20,6 @@ import { useAsync } from '../lib/useAsync';
  *   默认必须同时展示：成功 / 失败 / 部分 / 无法判断
  *   禁止产品设计诱导只看「神预测」。
  */
-const DOMAIN_ZH: Record<string, string> = {
-  career: '职业', money: '财务', study: '学习', social: '社交',
-  relationship: '关系', travel: '出行', project: '项目', habit: '习惯',
-  purchase: '消费', communication: '沟通', schedule: '日程',
-  unexpected_event: '意外',
-};
 
 type ResultFilter = 'all' | 'hit' | 'partial' | 'miss';
 
@@ -42,17 +36,25 @@ export default function Timeline() {
     [items],
   );
 
-  const filtered = items.filter((i) => {
-    if (domainFilter !== 'all' && !i.event_type.startsWith(`${domainFilter}.`)) return false;
+  // 先领域后结果：chips 上的 N 与下方列表口径一致（随领域联动）
+  const domainItems =
+    domainFilter === 'all'
+      ? items
+      : items.filter((i) => i.event_type.startsWith(`${domainFilter}.`));
+  const filtered = domainItems.filter((i) => {
     if (resultFilter === 'hit') return i.outcome === 1;
     if (resultFilter === 'partial') return i.outcome > 0 && i.outcome < 1;
     if (resultFilter === 'miss') return i.outcome === 0;
     return true;
   });
 
-  const full = items.filter((i) => i.outcome === 1).length;
-  const partial = items.filter((i) => i.outcome > 0 && i.outcome < 1).length;
-  const none = items.filter((i) => i.outcome === 0).length;
+  // 顶部统计卡保持全局口径；chips 计数随领域联动
+  const statFull = items.filter((i) => i.outcome === 1).length;
+  const statPartial = items.filter((i) => i.outcome > 0 && i.outcome < 1).length;
+  const statNone = items.filter((i) => i.outcome === 0).length;
+  const chipFull = domainItems.filter((i) => i.outcome === 1).length;
+  const chipPartial = domainItems.filter((i) => i.outcome > 0 && i.outcome < 1).length;
+  const chipNone = domainItems.filter((i) => i.outcome === 0).length;
   const meanBrier =
     items.length > 0 ? items.reduce((a, b) => a + b.brier, 0) / items.length : null;
 
@@ -61,9 +63,9 @@ export default function Timeline() {
       <PageHeader title="时间线" desc="全部已验证预测，按时间倒序。成功与失败同等展示。" />
 
       <div className="stagger grid grid-cols-2 gap-3 md:grid-cols-4">
-        <Stat label="完全命中" value={full} tone="good" />
-        <Stat label="部分命中" value={partial} tone="warn" />
-        <Stat label="未命中" value={none} tone="bad" />
+        <Stat label="完全命中" value={statFull} tone="good" />
+        <Stat label="部分命中" value={statPartial} tone="warn" />
+        <Stat label="未命中" value={statNone} tone="bad" />
         <Stat
           label="平均误差"
           value={meanBrier != null ? meanBrier.toFixed(3) : '—'}
@@ -96,7 +98,7 @@ export default function Timeline() {
                 }`}
               >
                 {label}
-                {k === 'hit' ? ` ${full}` : k === 'partial' ? ` ${partial}` : k === 'miss' ? ` ${none}` : ` ${items.length}`}
+                {k === 'hit' ? ` ${chipFull}` : k === 'partial' ? ` ${chipPartial}` : k === 'miss' ? ` ${chipNone}` : ` ${domainItems.length}`}
               </button>
             ))}
             {domains.length > 1 && (
@@ -122,7 +124,7 @@ export default function Timeline() {
                         : 'border-line text-t4 hover:text-t2'
                     }`}
                   >
-                    {DOMAIN_ZH[d] ?? d}
+                    {DOMAIN_LABEL[d] ?? d}
                   </button>
                 ))}
               </>

@@ -49,6 +49,7 @@ Prediction → Freeze → Reality → Verify → Score → Diagnose → Learn �
 | UI P2（round 21） | 八页全部 React.lazy+Suspense：首屏 JS ~1.35MB→~205KB（echarts 1052KB 独立 chunk 随 labs/models 按需加载）；窄屏（<md）侧边栏收成图标列（文字类 hidden md:inline），渐变背景偏移随断点联动 |
 | 审查 P3 收口 | (round 22, 2026-09-07)：验证 D（无法判定）与歧义分支也写 OutcomeRequestRecord 留痕（`_record_request` 统一入口：未应答复用补齐、request_id 序号唯一）；今日锦囊进程内 10 分钟缓存（键=用户+日期），conftest 加 autouse 清缓存夹具；回归 150 passed（+2 测试） |
 | 日卦行排版修复 | (round 23, 2026-09-07)：今日卡压缩日卦行的 HexGlyph 根宽 `w-24`(96px) 超出外层 `w-10`(40px) 包裹，爻条右溢压住卦名——改 `w-full` 由外壳控宽（全仓仅此一处使用），IAB 实测 40px 对齐无溢出；回归 150 passed，commit 00cd4f5 |
+| 第三轮全量审查+全修 | (round 24, 2026-09-07)：三路对抗审查（P0=0 / P1×4 / P2×4 / P3×11，所述均二次证实）。**P1**：详情接口补 `sha256_head/verification_due_at/signal_id/counter_evidence`（抽屉冻结哈希/验证截止曾恒空、React key undefined、反证死 UI）；**测试曾污染 dev 真实库**——imaging 存档不走 DI，每轮 pytest 写一行合成特征（实锤 20+20 行已清）；conftest 顶部在 app 导入前把 `XUANMIRROR_DB_URL` 指到临时库，`_mk_query` 注入 session+固定档案（此前预言机依赖本机真实出生档案，换机器必红）。**P2**：D 留痕从「抹掉」改「保留首次+追记先前裁定」；profile 创建/更新清今日锦囊缓存；verify 双击并发 500 → 进程内锁+flush 收口、`_score` IntegrityError 静默采信；request_id 尾 8→尾 12；窄屏侧栏底栏文字逐字折行破版 → hidden md:inline。**P3**：缓存 time→monotonic、imaging 死 import、backtest 缺键防御、Models 硬编码 74×165→动态、Verify 按钮标键盘提示、Timeline chips 随领域联动+DOMAIN_ZH 复用 DOMAIN_LABEL、今日卡补回彭祖百忌/全卦名/日主强弱、抽屉结果 1/0.5→中文+开启即聚焦关闭钮。新增 backtest 冒烟测试；回归 **151 passed**，套件跑完 dev 库行数恒 (0,0)。 |
 | git 远端 | `zz9744813-lab/suan` main |
 | 原 NovelForge | 完整镜像备份在 `F:\agi\_suan_backup\suan.git`（含 5 分支+5 PR） |
 
@@ -309,6 +310,8 @@ RealityState 扫描 → 候选事件(candidates)
 30. **祖先动画 transform 会吞掉 fixed 定位**（2026-09-06，round 19 UI P0 验收战果）：预测抽屉 `position:fixed inset-0` 渲染在滚动容器 MAIN 内，而 R 层有 `animate-fade-up` 类（keyframes 含 transform）的祖先——**任何非 none 的 transform（含恒等矩阵）都使该元素成为 fixed 后代的包含块**，抽屉随滚动偏移 -1214px 出视口，背景可见而文字全在屏外。修复：`createPortal(..., document.body)`。教训：**全屏遮罩类组件一律 portal 到 body**，别信任「fixed=视口」在深层组件树里的约定。
 
 31. **组件自锁宽度会顶破窄包裹层**（2026-09-07，round 23 用户截图战果）：今日卡压缩日卦行的 HexGlyph 根元素自锁 `w-24`(96px)，外层意图用 `w-10`(40px) 压缩——内宽 > 外宽时爻条照常按 96px 画，溢出压住右侧卦名「剥」。修复：HexGlyph 根改 `w-full` 由调用方控宽。教训：**小组件不要在根元素锁死宽度**（尤其内部全是 % 自适应时），让尺寸由调用方的布局上下文决定；改动前 grep 确认用法数量。
+
+32. **测试与真实库之间必须物理隔离**（2026-09-07，round 24 第三轮审查战果，红线级）：三个连通暗道同时存在——①imaging 路由存档分支绕过 DI 直开全局引擎写库（每轮 pytest 攒 1 行合成特征，dev 库实锤 20+20 行，且 `except` 静默吞错永不暴露）；②`TestClient(app)` 的 lifespan `create_db_and_tables()` 无参时建到真实 dev 库；③`_mk_query` 不传 session → bazi adapter 回退读开发者真实出生档案当预言机（换台机器无此档案就红）。修复：conftest 在**任何 app.\* 导入之前**覆写 `XUANMIRROR_DB_URL` 到临时文件库；imaging 存档改走 `Depends(get_session)`；测试侧注入 session + 固定档案。教训：**「路由默认 save=True + 异常静默吞错 + 直开全局引擎」三件套叠加 = 永远绿色的脏测试**；审查测试要追着「这条路最终连到哪个数据库文件」问到底。
 
 ## 12. 待优化方向（给接手者的建议，按优先级）
 

@@ -233,7 +233,7 @@ export default function Verify() {
               </div>
             </div>
 
-            {/* 批复按钮：四档裁决，大目标、强手感 */}
+            {/* 批复按钮：四档裁决，大目标、强手感；键盘 1-4 连批 */}
             <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
               {VERDICTS.map((v) => (
                 <button
@@ -244,7 +244,12 @@ export default function Verify() {
                   className={`btn-press flex flex-col items-center gap-1 rounded-xl border px-3 py-3 disabled:opacity-50 ${VERDICT_STYLE[v.tone]}`}
                 >
                   <span className="text-base font-semibold tracking-wide">{v.label}</span>
-                  <span className="text-[10px] opacity-70">快捷裁定</span>
+                  <span className="text-[10px] opacity-70">
+                    快捷裁定 · 按{' '}
+                    <kbd className="rounded border border-current/30 px-1 font-mono">
+                      {VERDICTS.findIndex((x) => x.key === v.key) + 1}
+                    </kbd>
+                  </span>
                 </button>
               ))}
             </div>

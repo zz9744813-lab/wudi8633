@@ -166,7 +166,7 @@ function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      className="btn-press flex w-full items-center gap-2.5 rounded-xl px-3 py-2 text-[13px] text-t2 hover:bg-navh hover:text-t1"
+      className="btn-press flex w-full items-center justify-center gap-2.5 rounded-xl px-0 py-2 text-[13px] text-t2 hover:bg-navh hover:text-t1 md:justify-start md:px-3"
       title={dark ? '切换到日间模式' : '切换到夜间模式'}
     >
       {dark ? (
@@ -181,7 +181,7 @@ function ThemeToggle() {
           <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
         </svg>
       )}
-      <span>{dark ? '日间模式' : '夜间模式'}</span>
+      <span className="hidden md:inline">{dark ? '日间模式' : '夜间模式'}</span>
     </button>
   );
 }
@@ -196,9 +196,17 @@ function BackendStatus() {
   const engineTotal = health.data ? Object.keys(health.data.engines).length : 7;
 
   return (
-    <div className="border-t border-line px-4 py-3">
-      <div className="flex items-center gap-2 text-[11px]">
+    <div className="border-t border-line px-2 py-3 md:px-4">
+      {/* 窄屏（<md）只留状态圆点，文字全隐藏——56px 栏宽内中文会逐字折行破版 */}
+      <div className="flex items-center justify-center gap-2 text-[11px] md:justify-start">
         <span
+          title={
+            health.loading
+              ? '连接中…'
+              : online
+                ? `后端在线 · 引擎 ${engineOk}/${engineTotal}`
+                : '后端离线'
+          }
           className={`inline-block h-1.5 w-1.5 rounded-full ${
             health.loading
               ? 'bg-slate-500'
@@ -207,16 +215,16 @@ function BackendStatus() {
                 : 'bg-cinnabar-400'
           }`}
         />
-        <span className={online ? 'text-t2' : 'text-t4'}>
+        <span className={`hidden md:inline ${online ? 'text-t2' : 'text-t4'}`}>
           {health.loading ? '连接中…' : online ? '后端在线' : '后端离线'}
         </span>
         {online && (
-          <span className="ml-auto tabular text-t4">
+          <span className="ml-auto hidden tabular text-t4 md:inline">
             引擎 {engineOk}/{engineTotal}
           </span>
         )}
       </div>
-      <p className="mt-2 text-[11px] leading-relaxed text-t5">
+      <p className="mt-2 hidden text-[11px] leading-relaxed text-t5 md:block">
         传统术数与个人预测实验平台，
         <br />
         不是经科学验证的预知系统。

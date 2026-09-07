@@ -601,6 +601,9 @@ export default function Future() {
                   </span>
                 ))}
               </div>
+              {daily.data.pengzu?.length > 0 && (
+                <div className="text-t4">彭祖百忌：{daily.data.pengzu.join('；')}</div>
+              )}
             </div>
             {/* 右：罗盘（视觉锚） */}
             <div className="mx-auto lg:mx-0">
@@ -626,6 +629,12 @@ export default function Future() {
                   <div>
                     <div className="font-serif text-lg font-semibold text-gt">
                       {daily.data.daily_gua.short}
+                      {daily.data.daily_gua.name &&
+                        daily.data.daily_gua.name !== daily.data.daily_gua.short && (
+                          <span className="ml-1.5 align-baseline text-xs font-normal text-t3">
+                            {daily.data.daily_gua.name}
+                          </span>
+                        )}
                     </div>
                     <Badge tone="gilt">动爻·第{daily.data.daily_gua.moving_yao}爻</Badge>
                   </div>
@@ -648,6 +657,11 @@ export default function Future() {
               {(daily.data.daily_gua.natal_notes?.length ?? 0) > 0 && (
                 <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-t3">
                   <CanonTag label="命数" />
+                  {daily.data.daily_gua.natal_verdict && (
+                    <b className="mr-1 font-medium text-t2">
+                      日主{daily.data.daily_gua.natal_verdict}
+                    </b>
+                  )}
                   {daily.data.daily_gua.natal_notes![0]}
                   {(daily.data.daily_gua.natal_notes?.length ?? 0) > 1 && ' ……（展开见全部）'}
                 </p>

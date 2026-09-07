@@ -8,6 +8,15 @@ from __future__ import annotations
 
 import importlib
 
+# 必须在一切 app.* 导入之前执行：把数据库重定向到独立临时文件。
+# 否则 lifespan 建表、八字档案兜底（query.session=None 时回退全局引擎）
+# 都会落在开发者真实 data/xuanmirror.db 上——既有污染先例（影像特征 20+20 行）。
+import os
+import tempfile
+
+_TEST_DB_DIR = tempfile.mkdtemp(prefix="xuanmirror-test-")
+os.environ["XUANMIRROR_DB_URL"] = f"sqlite:///{_TEST_DB_DIR}/test.db"
+
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy.pool import StaticPool

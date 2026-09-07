@@ -11,12 +11,14 @@
 from __future__ import annotations
 
 import logging
+import threading
 from datetime import date, datetime
 
 from app.utils import utcnow
 from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, Query
+from sqlalchemy.exc import IntegrityError
 from sqlmodel import Session, select
 
 logger = logging.getLogger("xuanmirror.api.predictions")
@@ -282,6 +284,10 @@ def get_prediction(
         "null_probability": row.null_probability,
         "window": [row.window_start.isoformat(), row.window_end.isoformat()],
         "time_scale": row.time_scale,
+        "sha256_head": (row.sha256 or "")[:16],
+        "verification_due_at": (
+            row.verification_due_at.isoformat() if row.verification_due_at else None
+        ),
         "success_criteria": row.success_criteria,
         "failure_criteria": row.failure_criteria,
         "grading_rule": row.grading_rule,
@@ -290,6 +296,7 @@ def get_prediction(
         "frozen_at": row.frozen_at.isoformat() if row.frozen_at else None,
         "signals": [
             {
+                "signal_id": s.signal_id,
                 "source": s.source_type,
                 "direction": s.direction,
                 "strength": s.strength,
@@ -299,6 +306,7 @@ def get_prediction(
                 "degraded": s.degraded,
                 "degrade_reason": s.degrade_reason,
                 "evidence": s.evidence,
+                "counter_evidence": s.counter_evidence,
             }
             for s in signals
         ],
@@ -329,6 +337,11 @@ def get_prediction(
 # ======================================================================
 # 提交验证（第 17 / 60 节）
 # ======================================================================
+# 桌面端 FastAPI 同步端点跑在线程池；双击 verify 会并发进本函数。
+# request_id 唯一键冲突会冒成 500，用进程内锁收窄「查重→插入」窗口。
+_REQUEST_LOCK = threading.Lock()
+
+
 def _record_request(
     session: Session,
     prediction_id: str,
@@ -342,34 +355,50 @@ def _record_request(
     """验证留痕统一入口。
 
     - 该预测已有未应答请求（D / 歧义先占的坑）→ 复用并补全，避免同预测一行行 D 堆积；
-    - 否则新建，request_id 追加序号保唯一（R-{尾8}、-1、-2…）。
+      复用时**保留首次 D 的轨迹**：旧裁定/旧附言被新裁决替换前追记进 ambiguity_note，
+      非空字段不被空值覆盖——否则「无法判定」一事连同附言会从审计视角消失；
+    - 否则新建，request_id 追加序号保唯一（R-{尾12}、-1、-2…）。
     """
-    reqs = session.exec(
-        select(OutcomeRequestRecord).where(
-            OutcomeRequestRecord.prediction_id == prediction_id
-        )
-    ).all()
-    pending = [r for r in reqs if r.answered_at is None]
-    if pending:
-        req = sorted(pending, key=lambda r: r.asked_at)[-1]
-        req.user_reply = user_reply
-        req.quick_answer = quick_answer
-        req.ambiguous = ambiguous
-        req.ambiguity_note = ambiguity_note
-        if answered:
-            req.answered_at = utcnow()
-    else:
-        suffix = "" if not reqs else f"-{len(reqs)}"
-        req = OutcomeRequestRecord(
-            request_id=f"R-{prediction_id[-8:]}{suffix}",
-            prediction_id=prediction_id,
-            user_reply=user_reply,
-            quick_answer=quick_answer,
-            ambiguous=ambiguous,
-            ambiguity_note=ambiguity_note,
-            answered_at=utcnow() if answered else None,
-        )
-    session.add(req)
+    with _REQUEST_LOCK:
+        reqs = session.exec(
+            select(OutcomeRequestRecord).where(
+                OutcomeRequestRecord.prediction_id == prediction_id
+            )
+        ).all()
+        pending = [r for r in reqs if r.answered_at is None]
+        if pending:
+            req = sorted(pending, key=lambda r: r.asked_at)[-1]
+            if req.quick_answer and quick_answer and req.quick_answer != quick_answer:
+                trail = f"先前裁定{req.quick_answer}"
+                if req.user_reply:
+                    trail += f"（{req.user_reply[:40]}）"
+                req.ambiguity_note = (
+                    f"{req.ambiguity_note}；{trail}" if req.ambiguity_note else trail
+                )
+            req.quick_answer = quick_answer or req.quick_answer
+            req.user_reply = user_reply or req.user_reply
+            req.ambiguous = req.ambiguous or ambiguous
+            if ambiguity_note:
+                req.ambiguity_note = (
+                    f"{req.ambiguity_note}；{ambiguity_note}"
+                    if req.ambiguity_note
+                    else ambiguity_note
+                )
+            if answered and req.answered_at is None:
+                req.answered_at = utcnow()
+        else:
+            suffix = "" if not reqs else f"-{len(reqs)}"
+            req = OutcomeRequestRecord(
+                request_id=f"R-{prediction_id[-12:]}{suffix}",
+                prediction_id=prediction_id,
+                user_reply=user_reply,
+                quick_answer=quick_answer,
+                ambiguous=ambiguous,
+                ambiguity_note=ambiguity_note,
+                answered_at=utcnow() if answered else None,
+            )
+        session.add(req)
+        session.flush()  # 让唯一键冲突在锁内暴露，而非等到端点提交时 500
     return req
 
 
@@ -421,6 +450,8 @@ def verify_prediction(
     collected = OutcomeCollectorAgent().run(collector_ctx)
 
     # 歧义 → 不强行判定（第 60 节）
+    # 注：当前 payload 恒为单候选，collector 只在多候选时置 ambiguous——
+    # 此分支现不可达，留作将来多候选解析的防御。
     if collected.output.get("ambiguous"):
         row.status = PredictionStatus.WAITING_USER.value
         session.add(row)
@@ -502,12 +533,12 @@ def verify_prediction(
         outcome = OutcomeJudgeAgent().judge(judge_ctx, prediction_id)
 
     # ---------- 3. 落库 ----------
+    # 注：歧义已在上方提前 return（当前 collector 单候选恒不歧义），此处不再传 ambiguous 死值。
     req = _record_request(
         session,
         prediction_id,
         user_reply=user_reply,
         quick_answer=quick_answer,
-        ambiguous=bool(collected.output.get("ambiguous")),
         answered=True,
     )
 
@@ -692,4 +723,8 @@ def _score(session: Session, row: PredictionRecord, outcome: float) -> None:
             rule_ids=rule_ids,
         )
     )
-    session.commit()
+    try:
+        session.commit()
+    except IntegrityError:
+        # 并发双击 verify：另一线程已写入同预测评分，数据一致，静默采信已有行
+        session.rollback()

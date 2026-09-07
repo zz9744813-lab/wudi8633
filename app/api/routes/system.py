@@ -99,6 +99,9 @@ def create_user(payload: UserIn, session: Session = Depends(get_session)):
             )
         )
         session.commit()
+        from app.services import cross_engine
+
+        cross_engine._ALMANAC_CACHE.clear()
 
     return {"user_id": user.id, "user_key": user.user_key}
 
@@ -144,6 +147,11 @@ def update_profile(user_id: int, payload: BirthProfileIn, session: Session = Dep
     session.add(profile)
     session.commit()
     session.refresh(profile)
+    # 档案变更会使今日锦囊的个人化字段（日主喜忌/桃花引动/冲日支）变化，
+    # 必须失效进程内缓存，否则 10 分钟内仍是旧档案口径。
+    from app.services import cross_engine
+
+    cross_engine._ALMANAC_CACHE.clear()
     return profile
 
 

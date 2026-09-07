@@ -102,11 +102,11 @@ def daily_almanac(
     """
     key = (user_id, target_date.isoformat())
     cached = _ALMANAC_CACHE.get(key)
-    if cached is not None and _time_mod.time() - cached[0] < _ALMANAC_TTL_S:
+    if cached is not None and _time_mod.monotonic() - cached[0] < _ALMANAC_TTL_S:
         return cached[1]
     result = _daily_almanac_compute(session, user_id, target_date)
     _ALMANAC_CACHE.clear()  # 单用户桌面语义，全清防跨日堆积
-    _ALMANAC_CACHE[key] = (_time_mod.time(), result)
+    _ALMANAC_CACHE[key] = (_time_mod.monotonic(), result)
     return result
 
 
