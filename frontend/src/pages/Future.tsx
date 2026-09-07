@@ -79,7 +79,7 @@ function HexGlyph({ lines, moving }: { lines: number[]; moving?: number }) {
     boxShadow: isMoving ? '0 0 8px rgba(201,162,39,0.55)' : 'none',
   });
   return (
-    <div className="flex w-24 shrink-0 flex-col gap-[7px]" aria-label="本日卦象">
+    <div className="flex w-full shrink-0 flex-col gap-[7px]" aria-label="本日卦象">
       {rows.map(({ v, pos }) => (
         <div
           key={pos}
