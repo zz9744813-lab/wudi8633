@@ -36,6 +36,16 @@ def _mock_llm(monkeypatch):
 
 
 @pytest.fixture(autouse=True)
+def _clear_almanac_cache():
+    """今日锦囊进程内缓存（round-22 P3）跨测试清零，避免同 (用户,日期) 键互吃。"""
+    from app.services import cross_engine
+
+    cross_engine._ALMANAC_CACHE.clear()
+    yield
+    cross_engine._ALMANAC_CACHE.clear()
+
+
+@pytest.fixture(autouse=True)
 def _disable_edge_gate(monkeypatch):
     """测试环境默认关闭预测质量门槛（MIN_PREDICTION_EDGE=0）。
 

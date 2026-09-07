@@ -26,6 +26,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import date, timedelta
+import time as _time_mod
 from typing import Any
 
 from sqlmodel import Session, select
@@ -86,6 +87,12 @@ def _zhi_wuxing(zhi: str) -> str:
 # ----------------------------------------------------------------------
 # 今日锦囊
 # ----------------------------------------------------------------------
+# 进程内短缓存（审查 P3）：未来页每次刷新都重算日卦+命数+本日参读，
+# 同日内容不变；「本日参读」最多滞后 TTL 分钟，对展示卡片可接受。键=(user_id, 日期)。
+_ALMANAC_CACHE: dict[tuple[int, str], tuple[float, dict[str, Any]]] = {}
+_ALMANAC_TTL_S = 600
+
+
 def daily_almanac(
     session: Session, user_id: int, target_date: date
 ) -> dict[str, Any]:
@@ -93,6 +100,19 @@ def daily_almanac(
 
     全部确定性计算；无出生档案时返回去掉个人化字段的通用版。
     """
+    key = (user_id, target_date.isoformat())
+    cached = _ALMANAC_CACHE.get(key)
+    if cached is not None and _time_mod.time() - cached[0] < _ALMANAC_TTL_S:
+        return cached[1]
+    result = _daily_almanac_compute(session, user_id, target_date)
+    _ALMANAC_CACHE.clear()  # 单用户桌面语义，全清防跨日堆积
+    _ALMANAC_CACHE[key] = (_time_mod.time(), result)
+    return result
+
+
+def _daily_almanac_compute(
+    session: Session, user_id: int, target_date: date
+) -> dict[str, Any]:
     from lunar_python import Solar
 
     solar = Solar.fromYmd(target_date.year, target_date.month, target_date.day)

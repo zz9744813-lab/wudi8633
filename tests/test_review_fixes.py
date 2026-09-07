@@ -347,3 +347,74 @@ def test_history_items_carry_label_and_description(env):
     top = hist[0]
     assert top.get("label") and top["label"] != top["event_type"], "label 应为本体中文名"
     assert top.get("description"), "应带冻结断言原文"
+
+
+# ======================================================================
+# 9/10. round-22 审查 P3 遗留：D 留痕 + 日卦缓存
+# ======================================================================
+def test_verify_d_leaves_request_trail(env):
+    """P3：快捷 D（无法判定）不落结果，但必须落 OutcomeRequestRecord 留痕；
+    随后补批复 A 时复用同一请求行（answered_at 补齐），不撞唯一键。"""
+    from sqlmodel import Session, select
+
+    from app.models.scoring import OutcomeRequestRecord
+
+    client, engine = env
+    _seed_user(engine)
+    client.post("/api/predictions/generate?user_id=1&scale=day&limit=15")
+    items = client.get("/api/predictions?user_id=1").json()["items"]
+    if not items:
+        pytest.skip("无预测可验证")
+    pid = items[0]["prediction_id"]
+
+    # 先按 D
+    r1 = client.post(f"/api/predictions/{pid}/verify", params={"quick_answer": "D"})
+    assert r1.status_code == 200 and r1.json()["status"] == "WAITING_USER"
+    with Session(engine) as s:
+        reqs = s.exec(
+            select(OutcomeRequestRecord).where(
+                OutcomeRequestRecord.prediction_id == pid
+            )
+        ).all()
+        assert len(reqs) == 1, "按 D 必须留一条验证请求记录"
+        assert reqs[0].quick_answer == "D"
+        assert reqs[0].answered_at is None
+
+    # 再补 A：复用 D 占的请求行（唯一键不炸），answered_at 补齐
+    r2 = client.post(f"/api/predictions/{pid}/verify", params={"quick_answer": "A"})
+    assert r2.status_code == 200, r2.text
+    assert r2.json()["outcome"] == 1.0
+    with Session(engine) as s:
+        reqs = s.exec(
+            select(OutcomeRequestRecord).where(
+                OutcomeRequestRecord.prediction_id == pid
+            )
+        ).all()
+        assert len(reqs) == 1, "补批复应复用 D 占的请求行而不是多插一行"
+        assert reqs[0].quick_answer == "A"
+        assert reqs[0].answered_at is not None
+
+
+def test_daily_almanac_short_cache(env):
+    """P3：同日同用户的今日锦囊第二次命中进程内缓存（不重算），跨日期不吃旧。"""
+    from datetime import date as _date
+
+    from sqlmodel import Session
+
+    from app.services import cross_engine
+
+    client, engine = env
+    _seed_user(engine)
+    cross_engine._ALMANAC_CACHE.clear()
+
+    with Session(engine) as s:
+        a = cross_engine.daily_almanac(s, 1, _date(2026, 9, 7))
+        n_after_first = len(cross_engine._ALMANAC_CACHE)
+        b = cross_engine.daily_almanac(s, 1, _date(2026, 9, 7))
+        n_after_second = len(cross_engine._ALMANAC_CACHE)
+        assert n_after_first == n_after_second == 1, "同日重复请求不得独写新条目"
+        assert a is b, "缓存命中应返回同一对象"
+        # 换日即重算（且单用户桌面语义下全清后仅一条）
+        c = cross_engine.daily_almanac(s, 1, _date(2026, 9, 8))
+        assert c["day_ganzhi"] != a["day_ganzhi"]
+    cross_engine._ALMANAC_CACHE.clear()

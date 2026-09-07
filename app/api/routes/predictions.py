@@ -329,6 +329,50 @@ def get_prediction(
 # ======================================================================
 # 提交验证（第 17 / 60 节）
 # ======================================================================
+def _record_request(
+    session: Session,
+    prediction_id: str,
+    *,
+    user_reply: str | None = None,
+    quick_answer: str | None = None,
+    ambiguous: bool = False,
+    ambiguity_note: str = "",
+    answered: bool = False,
+) -> OutcomeRequestRecord:
+    """验证留痕统一入口。
+
+    - 该预测已有未应答请求（D / 歧义先占的坑）→ 复用并补全，避免同预测一行行 D 堆积；
+    - 否则新建，request_id 追加序号保唯一（R-{尾8}、-1、-2…）。
+    """
+    reqs = session.exec(
+        select(OutcomeRequestRecord).where(
+            OutcomeRequestRecord.prediction_id == prediction_id
+        )
+    ).all()
+    pending = [r for r in reqs if r.answered_at is None]
+    if pending:
+        req = sorted(pending, key=lambda r: r.asked_at)[-1]
+        req.user_reply = user_reply
+        req.quick_answer = quick_answer
+        req.ambiguous = ambiguous
+        req.ambiguity_note = ambiguity_note
+        if answered:
+            req.answered_at = utcnow()
+    else:
+        suffix = "" if not reqs else f"-{len(reqs)}"
+        req = OutcomeRequestRecord(
+            request_id=f"R-{prediction_id[-8:]}{suffix}",
+            prediction_id=prediction_id,
+            user_reply=user_reply,
+            quick_answer=quick_answer,
+            ambiguous=ambiguous,
+            ambiguity_note=ambiguity_note,
+            answered_at=utcnow() if answered else None,
+        )
+    session.add(req)
+    return req
+
+
 @router.post("/predictions/{prediction_id}/verify")
 def verify_prediction(
     prediction_id: str,
@@ -380,6 +424,14 @@ def verify_prediction(
     if collected.output.get("ambiguous"):
         row.status = PredictionStatus.WAITING_USER.value
         session.add(row)
+        _record_request(
+            session,
+            prediction_id,
+            user_reply=user_reply,
+            quick_answer=quick_answer,
+            ambiguous=True,
+            ambiguity_note=collected.output.get("ambiguity_note") or "",
+        )
         session.commit()
         return {
             "status": "WAITING_USER",
@@ -392,6 +444,13 @@ def verify_prediction(
     if quick == "D":
         row.status = PredictionStatus.WAITING_USER.value
         session.add(row)
+        # D 不落 outcome，但要留痕：否则「无法判定」从审计视角不可见（P3 审查项）
+        _record_request(
+            session,
+            prediction_id,
+            user_reply=user_reply,
+            quick_answer="D",
+        )
         session.commit()
         return {
             "prediction_id": prediction_id,
@@ -443,15 +502,14 @@ def verify_prediction(
         outcome = OutcomeJudgeAgent().judge(judge_ctx, prediction_id)
 
     # ---------- 3. 落库 ----------
-    req = OutcomeRequestRecord(
-        request_id=f"R-{prediction_id[-8:]}",
-        prediction_id=prediction_id,
+    req = _record_request(
+        session,
+        prediction_id,
         user_reply=user_reply,
         quick_answer=quick_answer,
-        answered_at=utcnow(),
         ambiguous=bool(collected.output.get("ambiguous")),
+        answered=True,
     )
-    session.add(req)
 
     rec = OutcomeRecord(
         outcome_id=outcome.outcome_id,
