@@ -48,6 +48,7 @@ Prediction → Freeze → Reality → Verify → Score → Diagnose → Learn �
 | UI P1（round 20） | 模型页双页签（实证矩阵+公众回测：`GET /api/analytics/backtest` 只读 docs/回测数据-公众人物.json，74人×165事件+逐术式命中率+二项 p 值+口径警示，spec datas 已收录）+ 术式增益雷达（echarts radar，skill -1~1 截断 vs Null 0 虚线环）；相法历史纵向对比（特征 SVG 趋势+相对上次差分，≥2 次存档才显示）；时间线结果+领域双维 chips；命盘页吸顶锚点导航 |
 | UI P2（round 21） | 八页全部 React.lazy+Suspense：首屏 JS ~1.35MB→~205KB（echarts 1052KB 独立 chunk 随 labs/models 按需加载）；窄屏（<md）侧边栏收成图标列（文字类 hidden md:inline），渐变背景偏移随断点联动 |
 | 审查 P3 收口 | (round 22, 2026-09-07)：验证 D（无法判定）与歧义分支也写 OutcomeRequestRecord 留痕（`_record_request` 统一入口：未应答复用补齐、request_id 序号唯一）；今日锦囊进程内 10 分钟缓存（键=用户+日期），conftest 加 autouse 清缓存夹具；回归 150 passed（+2 测试） |
+| 日卦行排版修复 | (round 23, 2026-09-07)：今日卡压缩日卦行的 HexGlyph 根宽 `w-24`(96px) 超出外层 `w-10`(40px) 包裹，爻条右溢压住卦名——改 `w-full` 由外壳控宽（全仓仅此一处使用），IAB 实测 40px 对齐无溢出；回归 150 passed，commit 00cd4f5 |
 | git 远端 | `zz9744813-lab/suan` main |
 | 原 NovelForge | 完整镜像备份在 `F:\agi\_suan_backup\suan.git`（含 5 分支+5 PR） |
 
@@ -306,6 +307,8 @@ RealityState 扫描 → 候选事件(candidates)
 
 29. **相法测量假数据与 mediapipe 打包**（2026-09-06，round 18 数量级核验战果）：①面相旧实现「三庭/五眼/眉眼/鼻唇颌」全是 Haar 框等分**写死常数**——传谁的照片解读都是「三庭匀称」，千人一面假测量；现改 MediaPipe FaceLandmarker 真关键点（facemesh 不可用时只出真可测的框宽高比，宁缺毋假）。②掌纹 `palm_width_ratio=掌宽/图宽` 随取景漂移无意义，改 Hands 真掌宽/掌长（0.6~0.8）；`_measure_line_group` **投影轴写反**（单条线 length_ratio 恒 0）已修，阈值以合成纹图核验。③mediapipe 1.x **移除 solutions API**，须用 Tasks API + .task 模型文件（Apache 2.0，已入 `app/core/face/assets/`）；**spec 的 excludes 里曾排除 matplotlib**——mediapipe tasks 链路 import matplotlib.pyplot，被排除即 exe 内 ModuleNotFoundError（hiddenimports 打不过 excludes），已从 excludes 移除并显式收集。教训：**数量级核验要测的是「测量数学层」（canonical 输入→已知输出），别只测引擎不测测量**；excludes 名单会静默杀死 hiddenimports。
 30. **祖先动画 transform 会吞掉 fixed 定位**（2026-09-06，round 19 UI P0 验收战果）：预测抽屉 `position:fixed inset-0` 渲染在滚动容器 MAIN 内，而 R 层有 `animate-fade-up` 类（keyframes 含 transform）的祖先——**任何非 none 的 transform（含恒等矩阵）都使该元素成为 fixed 后代的包含块**，抽屉随滚动偏移 -1214px 出视口，背景可见而文字全在屏外。修复：`createPortal(..., document.body)`。教训：**全屏遮罩类组件一律 portal 到 body**，别信任「fixed=视口」在深层组件树里的约定。
+
+31. **组件自锁宽度会顶破窄包裹层**（2026-09-07，round 23 用户截图战果）：今日卡压缩日卦行的 HexGlyph 根元素自锁 `w-24`(96px)，外层意图用 `w-10`(40px) 压缩——内宽 > 外宽时爻条照常按 96px 画，溢出压住右侧卦名「剥」。修复：HexGlyph 根改 `w-full` 由调用方控宽。教训：**小组件不要在根元素锁死宽度**（尤其内部全是 % 自适应时），让尺寸由调用方的布局上下文决定；改动前 grep 确认用法数量。
 
 ## 12. 待优化方向（给接手者的建议，按优先级）
 
